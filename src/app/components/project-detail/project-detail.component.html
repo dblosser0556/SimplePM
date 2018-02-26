@@ -1,0 +1,56 @@
+<form (ngSubmit)="onSubmit()" name="projectForm" class="project-form" [formGroup]="projectForm" novalidate>
+  <input readonly hidden formControlName="projectID" class="required">
+  <div class="row">
+    <div class="col-xs-12 col-12 col-sm-6 col-md-4 form-group">
+      <label class="center-block">Name:</label>
+      <input class="form-control" formControlName="projectName" required>
+      <div align="start" *ngIf="projectForm.controls.projectName.errors && !projectForm.controls.projectName.pristine">
+        <div class="invalid-input">
+          Project Name is required!
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-12 col-12 col-sm-6 col-md-4 form-group">
+      <label class="center-block">Description:</label>
+      <input class="form-control" formControlName="projectDesc">
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12 col-12 col-sm-6 col-md-4 form-group">
+      <label class="center-block">Project Manager:</label>
+      <input class="form-control" formControlName="projectManager">
+    </div>
+    <div class="col-xs-12 col-12 col-sm-6 col-md-4 form-group">
+      <label class="center-block">Planned Start:</label>
+      <input type="text" class="form-control" bsDatepicker [bsConfig]="bsConfig" formControlName="plannedStartDate">
+    </div>
+    <div class="col-xs-12 col-12 col-sm-6 col-md-4 form-group">
+      <label class="center-block">Actual Start:</label>
+      <input type="text" class="form-control" bsDatepicker [bsConfig]="bsConfig" formControlName="actualStartDate">
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12 col-12 col-sm-6 col-md-4 form-group">
+      <label class="center-block">Project Group:</label>
+      <select class="form-control" formControlName="groupId">
+        <option *ngFor="let group of groupList" [value]="group.groupId">{{group.groupName}}</option>
+      </select>
+    </div>
+    <div class="col-xs-12 col-12 col-sm-6 col-md-4 form-group">
+      <label class="center-block">Project Status:</label>
+      <select class="form-control" formControlName="statusId">
+        <option *ngFor="let status of statusList" [value]="status.statusId">{{status.statusName}}</option>
+      </select>
+    </div>
+  </div>
+  <div class="form-group-row">
+    <button class="btn btn-primary" type="submit" [disabled]="!projectForm.valid">
+      <i class="fas fa-save"></i>Save</button>
+    <button type="button" class="btn btn-warning" (click)="revert()">
+      <i class="fas fa-window-restore"></i>Reset</button>
+
+    <button type="button" class="btn btn-warning" (click)="cancel()">
+      <i class="fas fa-ban"></i>Cancel</button>
+  </div>
+
+</form>

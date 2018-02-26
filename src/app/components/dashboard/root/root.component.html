@@ -1,0 +1,58 @@
+<div class="row">
+  <nav class="sidebar" [class.active]=isActive() id="sidebar">
+    <ul class="nav nav-pills flex-column">
+      <li class="nav-item">
+        <a class="nav-link" href="#" routerLinkActive="active" routerLink="/dashboard/home">
+          <i class="fas fa-home"></i>
+          Home</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#" routerLinkActive="active" routerLink="/dashboard/divisions">
+          <i class="fas fa-edit"></i>
+          Divisions</a>
+      </li> 
+      <li class="nav-item">
+          <a class="nav-link" href="#" routerLinkActive="active" routerLink="/dashboard/project">
+            <i class="fas fa-puzzle-piece"></i>
+            My Project</a>
+        </li>               
+    
+    <li class="nav-item" dropdown container="body">
+        <a href dropdownToggle (click)="false" class="nav-link">
+          <i class="fas fa-edit"></i>
+          Dropdown 
+          <span class="fas fa-caret-down"></span>
+        </a>
+        <ul *dropdownMenu class="dropdown-menu" role="menu">
+          <li role="menuitem"><a class="dropdown-item" href="#">Action</a></li>
+          <li role="menuitem"><a class="dropdown-item" href="#">Another action</a></li>
+          <li role="menuitem"><a class="dropdown-item" href="#">Something else here</a></li>
+          <li class="divider dropdown-divider"></li>
+          <li role="menuitem"><a class="dropdown-item" href="#">Separated link</a>
+          </li>
+        </ul>
+      </li>
+    <li class="nav-item">
+      <a class="nav-link" href="">
+        <i class="fas fa-discourse"></i>
+        About
+      </a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-link" href="" routerLinkActive="active" routerLink="/configuration/roles">
+        <i class="fas fa-share-square"></i>
+        Contact
+      </a>
+    </li>
+  </ul>
+  </nav>   
+  <main class="container-fluid" role="main" [class.active]=isActive() id="main">
+      <h4>{{pageTitle}}</h4>
+      <router-outlet></router-outlet>
+      <alert  *ngIf="!inError" type="danger"  dismissible="true"  (onClosed)="inError = false">
+        <strong>Oops:&nbsp;</strong>{{errorMsg}}
+      </alert>
+    
+    </main>     
+</div>

@@ -1,0 +1,43 @@
+<nav class="navbar fixed-top navbar-expand-lg navbar-default">
+  <a class="navbar-brand" href="#">SimplePM</a>
+  <div *ngIf="status">
+    <button type="button" class="btn btn-navbar" (click)="setSideBarActiveStatus()" btnCheckbox btnCheckboxTrue="1" btnCheckboxFalse="0">
+      <i class="fas fa-align-left"></i>
+    </button>
+  </div>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown"
+    aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNavDropdown">
+    <div class="navbar-spacer"></div>
+    <ul *ngIf="!status" class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" href="#" routerLinkActive="active" routerLink="/login">Login</a>
+      </li>
+    </ul>
+
+    <ul *ngIf="status" class="navbar-nav">
+      <li class="nav-item">
+        {{userName}}
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#" (click)="logout">Logout</a>
+      </li>
+    </ul>
+    <div class="btn-group" dropdown>
+      <button dropdownToggle type="button" class="btn btn-navbar dropdown-toggle">
+        <i class="fas fa-cog"></i>
+      </button>
+      <ul *dropdownMenu class="dropdown-menu dropdown-menu-right" role="menu">
+        <li role="menuitem">
+          <a class="dropdown-item" href="#">Preferences</a>
+        </li>
+        <li class="divider dropdown-divider"></li>
+        <li role="menuitem">
+          <a class="dropdown-item" href="#" routerLink="/configuration/project">Configuration</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>

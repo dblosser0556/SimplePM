@@ -1,0 +1,86 @@
+
+
+.table-sm {
+  font-size: .7rem;
+  table-layout: fixed;
+}
+
+
+
+
+.scrolling {
+  overflow-x: scroll;
+  margin-left: 5em;
+  overflow-y: visible;
+  padding: 0;
+}
+
+.action-col {
+  width: 50px;
+}
+
+.fixed-col {
+  width: 100px;
+  text-overflow: clip;
+} 
+
+.month-col {
+  width: 70px;
+}
+.total-col {
+  width: 70px;
+}
+
+
+select.form-control {
+  height: calc(1rem + 2px) !important;
+}
+
+.form-control {
+  padding: 0rem;
+  font-size: .7rem;
+}
+
+.btn-sm {
+    padding: 0rem;
+}
+
+.pagination {
+	display: inline-block;
+}
+
+.pagination a {
+	color: black;
+	float: left;
+	padding: 3px 5px;
+	text-decoration: none;
+  border: 1px solid #ddd;
+  font-size: 1rem;
+}
+
+.pagination a.active {
+	background-color: #4CAF50;
+	color: white;
+	border: 1px solid #4CAF50;
+}
+
+.pagination a:hover:not(.active) {background-color: #ddd;}
+
+.pagination a:first-child {
+	border-top-left-radius: 5px;
+	border-bottom-left-radius: 5px;
+}
+
+.pagination a:last-child {
+	border-top-right-radius: 5px;
+	border-bottom-right-radius: 5px;
+}
+
+.footer-row {
+	background-color: rgb(95, 136, 160);
+}
+
+.header-row { 
+	background-color: rgb(95, 136, 160);
+}
+

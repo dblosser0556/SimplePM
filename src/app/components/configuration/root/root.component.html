@@ -1,0 +1,55 @@
+<div class="row">
+  <nav class="sidebar" [class.active]=isActive() id="sidebar">
+    <ul class="nav nav-pills">
+        <li class="nav-item">
+            <a class="nav-link" href="#" routerLinkActive="active" routerLink="/dashboard/home">
+              <i class="fas fa-home"></i>
+              Home</a>
+          </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#" routerLinkActive="active" routerLink="/configuration/project">
+          <i class="fas fa-puzzle-piece"></i>
+          Projects</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="" routerLinkActive="active" routerLink="/configuration/phase">
+          <i class="fas fa-edit"></i>
+          Phases</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="" routerLinkActive="active" routerLink="/configuration/role">
+          <i class="fas fa-users"></i>
+          Roles
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="" routerLinkActive="active" routerLink="/configuration/resourcetype">
+          <i class="fas fa-address-book"></i>
+          Resource Types
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="" routerLinkActive="active" routerLink="/configuration/fixedpricetype">
+          <i class="fas fa-star"></i>
+          Fixed Price Types
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="" routerLinkActive="active" routerLink="/configuration/status">
+          <i class="fas fa-certificate"></i>
+          Status
+        </a>
+      </li>
+      
+    </ul>
+  </nav>
+  <main class="container-fluid" role="main" [class.active]=isActive() id="main">
+    <!--class="col-sm-9 ml-sm-auto col-md-10 pt-3" -->
+    <h4>{{pageTitle}}</h4>
+    <router-outlet></router-outlet>
+    <alert *ngIf="!isOpen" type="danger"  dismissible="true" dismissOnTimeout="5000" (onClosed)="isOpen = false">
+      <strong>Oops:&nbsp;</strong>{{errorMsg}}
+    </alert>
+  </main>
+  
+</div>

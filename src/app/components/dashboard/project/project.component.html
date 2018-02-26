@@ -1,0 +1,16 @@
+<h3 *ngIf="isLoading">
+  <i>Loading project ... </i>
+</h3>
+<div *ngIf="currentProject">
+  <tabset>
+    <tab heading="Details" id="tab1">
+      <div class="container" style="background: white">
+        <app-project-detail [(project)]="currentProject"></app-project-detail>
+      </div>
+    </tab>
+    <tab heading="Forecast" (select)="alertMe($event)">
+      <app-project-monthly-detail [project]="currentProject"></app-project-monthly-detail>
+    </tab>
+    <tab heading="Actuals">Actuals to be implemented</tab>
+  </tabset>
+</div>
