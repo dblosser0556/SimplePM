@@ -6,9 +6,11 @@ import { ProjectDetailModule } from '../project-detail/project-detail.module';
 
 import { routing } from './configuration.routing';
 
-import { AlertModule } from 'ngx-bootstrap/alert';
+/* import { AlertModule } from 'ngx-bootstrap/alert';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
-import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker'; */
+
+import { AppBootstrapModule } from '../../appbootstrapmodule';
 
 import { FixedPriceTypeService } from './fixed-price-type/fixed-price-type.service';
 import { RoleService } from './role/role.service';
@@ -48,9 +50,10 @@ import { GroupComponent } from './group/group.component';
     routing,
     SharedModule,
     ReactiveFormsModule,
-    BsDropdownModule,
+    AppBootstrapModule,
+   /*  BsDropdownModule,
     AlertModule,
-    BsDatepickerModule,
+    BsDatepickerModule, */
     ProjectDetailModule
   ],
   declarations: [

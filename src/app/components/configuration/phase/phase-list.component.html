@@ -18,12 +18,12 @@
           </td>
           <td>
             <a (click)="edit(phase)">
-              <i class="fas fa-edit">edit</i>
+              <i class="fas fa-edit"></i>
             </a>
           </td>
           <td>
             <a ref (click)="onDelete(phase.phaseId)">
-              <i class="fas fa-trash">delete</i>
+              <i class="fas fa-trash"></i>
             </a>
           </td>
         </tr>
@@ -31,11 +31,11 @@
       </table>
       <div class="card-block">
         <button class="btn btn-primary" (click)="add()">
-          <i class="fas square-plus"n>add</i>Add New</button>
+          <i class="fas fa-plus-square"></i>Add New</button>
       </div>
     </div>
   </div>
-  <div class="edit-detail-card" *ngIf="selectedPhase">
+  <div class="card" *ngIf="selectedPhase">
     <div class="card-block">
       <app-phase-detail [phase]="selectedPhase" (phaseChange)="updateList($event)" ></app-phase-detail>
     </div>

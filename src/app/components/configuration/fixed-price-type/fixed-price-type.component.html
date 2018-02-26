@@ -4,7 +4,7 @@
       <div *ngIf="isLoading">Loading Fixed Price Types ...</div>
       <table class="table" *ngIf="!isLoading">
         <tr>
-          <td>Fixeed Cost Type</td>
+          <td>Fixed Cost Types</td>
           <td>Description</td>
           <td>Edit</td>
           <td>Delete</td>
@@ -18,12 +18,12 @@
           </td>
           <td>
             <a (click)="edit(item)">
-              <i class="fas fa-edit">edit</i>
+              <i class="fas fa-edit"></i>
             </a>
           </td>
           <td>
             <a ref (click)="onDelete(item.fixedPriceTypeId)">
-              <i class="fas fa-trash">delete</i>
+              <i class="fas fa-trash"></i>
             </a>
           </td>
         </tr>
@@ -31,7 +31,7 @@
       </table>
       <div class="card-block">
         <button class="btn btn-primary" (click)="add()">
-          <i class="fas fa-square-plus">add</i>Add New</button>
+          <i class="fas fa-plus-square"></i>Add New</button>
         </div>
     </div>
   </div>

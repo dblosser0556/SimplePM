@@ -18,12 +18,12 @@
           </td>
           <td>
             <a (click)="edit(item)">
-              <i class="fas fa-edit">edit</i>
+              <i class="fas fa-edit"></i>
             </a>
           </td>
           <td>
             <a ref (click)="onDelete(item.resourceTypeId)">
-              <i class="fas fa-trash">delete</i>
+              <i class="fas fa-trash"></i>
             </a>
           </td>
         </tr>
@@ -31,11 +31,11 @@
       </table>
       <div class="card-block">
         <button class="btn btn-primary" (click)="add()">
-          <i class="fas fa-square-plus" >add</i>Add New</button>
+          <i class="fas fa-plus-square" ></i>Add New</button>
       </div>
     </div>
   </div>
-  <div class="edit-detail-card" *ngIf="selectedItem">
+  <div class="card" *ngIf="selectedItem">
     <div class="card-block">
       <app-resource-type-detail [item]="selectedItem" (itemChange)="updateList($event)" ></app-resource-type-detail>
     </div>
