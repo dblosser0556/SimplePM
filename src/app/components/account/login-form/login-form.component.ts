@@ -3,7 +3,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 
 import { Credentials } from '../../../models';
-import { UserService } from '../../../services';
+import { UserService, ErrorMsgService, ToastrType } from '../../../services';
 import { HttpErrorResponse } from '@angular/common/http/src/response';
 @Component({
   selector: 'app-login-form',
@@ -16,13 +16,16 @@ export class LoginFormComponent implements OnInit, OnDestroy {
   private subscription: Subscription;
 
   brandNew: boolean;
-  errors: string;
+  errors: any;
   isRequesting: boolean;
   submitted = false;
   userName: string;
   credentials: Credentials = { email: '', password: '' };
 
-  constructor(private userService: UserService, private router: Router, private activatedRoute: ActivatedRoute) { }
+  constructor(private userService: UserService,
+      private router: Router,
+      private activatedRoute: ActivatedRoute,
+      private errMessage: ErrorMsgService) { }
 
   ngOnInit() {
 
@@ -61,11 +64,16 @@ export class LoginFormComponent implements OnInit, OnDestroy {
               error => {
                 this.isRequesting = false;
                 this.errors = error.message;
+                this.errMessage.showUserMessage(ToastrType.warning, 'Oops - Something went wrong', error.message );
               }
             );
           }
         },
-        error => this.errors = error.message);
+        error => {
+          this.errors = error;
+          this.errMessage.showUserMessage(ToastrType.warning, 'Oops - Something went wrong', this.errors );
+          this.isRequesting = false;
+        });
     }
   }
 }

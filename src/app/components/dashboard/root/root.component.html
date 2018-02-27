@@ -50,9 +50,7 @@
   <main class="container-fluid" role="main" [class.active]=isActive() id="main">
       <h4>{{pageTitle}}</h4>
       <router-outlet></router-outlet>
-      <alert  *ngIf="!inError" type="danger"  dismissible="true"  (onClosed)="inError = false">
-        <strong>Oops:&nbsp;</strong>{{errorMsg}}
-      </alert>
+      
     
     </main>     
 </div>

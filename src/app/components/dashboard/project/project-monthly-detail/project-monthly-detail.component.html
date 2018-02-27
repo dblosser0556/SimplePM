@@ -3,17 +3,18 @@
 
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
       aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
+      <div class="navbar-toggler-icon"></div>
     </button>
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav mr-auto">
         <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
           <div class="btn-group mr-2" role="group" aria-label="First group">
-            <button type="button" class="btn btn-secondary">1</button>
-            <button type="button" class="btn btn-secondary">2</button>
-            <button type="button" class="btn btn-secondary">3</button>
-            <button type="button" class="btn btn-secondary">4</button>
+            <button type="button" class="btn btn-secondary" (click)="updateCapWeightPercent(1)">100%</button>
+            <button type="button" class="btn btn-secondary" (click)="updateCapWeightPercent(.8)">80%</button>
+            <button type="button" class="btn btn-secondary" (click)="updateCapWeightPercent(.5)">50%</button>
+            <button type="button" class="btn btn-secondary" (click)="updateCapWeightPercent(.25)">25%</button>
+            <button type="button" class="btn btn-secondary" (click)="updateCapWeightPercent(0)">0%</button>
           </div>
           <div class="btn-group mr-2" role="group" aria-label="Second group">
             <button type="button" class="btn btn-secondary">5</button>
@@ -32,96 +33,97 @@
 <div class="table-scroll">
 
   <div>
-    <table appMultiSelect multi-cell-select (selectedIds)="getSelectedIds($event)" class="table table-sm" id="monthlydetail">
+    <table appMultiselect multi-cell-select (selectedIds)="getSelectedIds($event)" class="table table-sm" id="monthlydetail">
       <thead class="header-row">
         <tr>
-          <th class="action-col"></th>
-          <th class="fixed-col role-col">Role/Category</th>
-          <th class="fixed-col resource-col">Resource Name</th>
-          <th class="fixed-col type-col">ResourceType</th>
-          <th class="fixed-col vendor-col">Vendor</th>
-          <th class="fixed-col rate-col">Rate</th>
-          <th class="month-col">Month</th>
-          <th class="month-col" *ngFor="let month of project.months.slice([fcol],[lcol])">{{month.monthNo}}</th>
-          <th class="total-col">
-            <button class="btn btn-sm" tooltip="Add Month">
-              <i class="fas fa-square-plus" (click)="addMonth()">add</i>
-            </button>
-          </th>
+          <th class="action-col">Labor</th>
+          <th class="fixed-col">Role/Category</th>
+          <th class="fixed-col">Resource Name</th>
+          <th class="fixed-col">ResourceType</th>
+          <th class="fixed-col">Vendor</th>
+          <th class="fixed-col">Rate</th>
+          <th class="month-col"> <a tooltip="Add Month" (click)="addMonth()">
+            <i class="fas fa-plus-square"></i>
+          </a></th>
+          <th class="month-col" *ngFor="let month of project.months.slice([fcol],[lcol])">{{project.startDate().setMonth(project.startDate().getMonth() + month.monthNo) |date:'MMM-yy' }}</th>
+          
         </tr>
         <tr>
-          <th class="action-col"></th>
-          <th class="fixed-col role-col" colspan="4"></th>
+          <th class="action-col"> <a tooltip="Add Resource" (click)="addResource()">
+            <i class="fas fa-plus-square" ></i>
+          </a></th>
+          <th class="fixed-col"></th>
+          <th class="fixed-col"></th>
+          <th class="fixed-col"></th>
+          <th class="fixed-col"></th>
           <th class="total-col">($/hr)</th>
-          <th class="month-col">Phase-></th>
+          <th class="month-col">Total</th>
           <th class="month-col" *ngFor="let month of project.months.slice([fcol],[lcol]) let m = index" (click)="editPhase(month, m)">
-            <span *ngIf="!month.editMode"> {{month.phaseName}}</span>
+            <div *ngIf="!month.editMode"> {{month.phaseName}}</div>
             <select class="form-control" *ngIf="month.editMode" (change)="updatePhase($event, month)">
               <option *ngFor="let phase of phaseList" [value]="phase.phaseId" [selected]="phase.phaseId == month.phaseId">{{phase.phaseName}}</option>
             </select>
           </th>
         </tr>
-        <tr>
-          <th>
-            <button class="btn btn-sm" tooltip="Add Resource">
-              <i class="fas fa-square-plus" (click)="addResource()">add</i>
-            </button>
+       <!-- <tr>
+          <th class="action-col">
+           
           </th>
-          <th colspan="4">Labor</th>
-          <th></th>
-          <td class="month-col">Total</td>
-          <td class="month-col" *ngFor="let month of project.months.slice([fcol],[lcol])">Hours</td>
-        </tr>
+          <th class="fixed-col"  colspan="4">Labor</th>
+          <th class="fixed-col" ></th>
+          <th class="total-col">Total</th>
+          <th class="month-col" *ngFor="let month of project.months.slice([fcol],[lcol])">Hours</th>
+        </tr> -->
       </thead>
 
       <tr *ngFor="let resource of project.resources let i = index">
         <th class="action">
           <a *ngIf="!resource.editMode" (click)="deleteResource(resource, i)">
-            <i class="fas fa-trash">delete</i>
+            <i class="fas fa-trash"></i>
           </a>
           <a *ngIf="!resource.editMode" (click)="editResource(resource, i)">
-            <i class="fas fa-edit">edit</i>
+            <i class="fas fa-edit"></i>
           </a>
           <a *ngIf="resource.editMode" (click)="saveResourceEdit(resource, i)">
-            <i class="fas fa-save">save</i>
+            <i class="fas fa-save"></i>
           </a>
           <a *ngIf="resource.editMode" (click)="cancelResourceEdit(resource, i)">
-            <i class="fas fa-ban">cancel</i>
+            <i class="fas fa-ban"></i>
           </a>
         </th>
-        <th (click)="editResource(resource, i)" title="Click to edit">
-          <span *ngIf="!resource.editMode"> {{resource.roleName}}</span>
+        <th class="fixed-col" (click)="editResource(resource, i)" title="Click to edit">
+          <div class="fixed-col" *ngIf="!resource.editMode"> {{resource.roleName}}</div>
           <select *ngIf="resource.editMode" class="form-control" (change)="updateResource($event, 'role', resource)">
             <option *ngFor="let role of roleList" [value]="role.roleId" [selected]="role.roleId == resource.roleId">{{role.roleName}}</option>
           </select>
         </th>
-        <th (click)="editResource(resource, i)" title="Click to edit">
-          <span *ngIf="!resource.editMode"> {{resource.resourceName}}</span>
+        <th class="fixed-col" (click)="editResource(resource, i)" title="Click to edit">
+          <div class="fixed-col" *ngIf="!resource.editMode"> {{resource.resourceName}}</div>
           <input (blur)="updateResource($event, 'resourceName', resource, i)" *ngIf="resource.editMode" name="resourceName" class="form-control"
             type="text" [value]="resource.resourceName" />
         </th>
 
-        <th (click)="editResource(resource, i)" title="Click to edit">
-          <span *ngIf="!resource.editMode"> {{resource.resourceTypeName}}</span>
+        <th class="fixed-col" (click)="editResource(resource, i)" title="Click to edit">
+          <div class="fixed-col" *ngIf="!resource.editMode"> {{resource.resourceTypeName}}</div>
           <select *ngIf="resource.editMode" class="form-control" (change)="updateResource($event, 'type', resource)">
             <option *ngFor="let type of resourceTypeList" [value]="type.resourceTypeId" [selected]="type.resourceTypeId == resource.resourceTypeId">{{type.resourceTypeName}} </option>
           </select>
         </th>
-        <th (click)="editResource(resource, i)" title="Click to edit">
-          <span *ngIf="!resource.editMode"> {{resource.vendor}}</span>
+        <th class="fixed-col" (click)="editResource(resource, i)" title="Click to edit">
+          <div class="fixed-col" *ngIf="!resource.editMode"> {{resource.vendor}}</div>
           <input (blur)="updateResource($event, 'vendor', resource, i)" *ngIf="resource.editMode" name="resourceVendor" class="form-control"
             type="text" [value]="resource.vendor" />
         </th>
 
-        <th (click)="editResource(resource, i)" title="Click to edit">
-          <span *ngIf="!resource.editMode"> {{resource.rate}}</span>
+        <th class="fixed-col" (click)="editResource(resource, i)" title="Click to edit">
+          <div class="fixed-col" *ngIf="!resource.editMode"> {{resource.rate}}</div>
           <input (blur)="updateResource($event, 'rate', resource)" *ngIf="resource.editMode" name="resourceRate" class="form-control"
             type="text" [value]="resource.rate" />
         </th>
         <th class="month-col">{{resource.totalPlannedEffort}}</th>
-        <td class="ui-state-default month-col" id="{{resource.resourceId}}-{{month.resourceMonthId}}" *ngFor="let month of resource.resourceMonths.slice([fcol],[lcol])">
+        <td class="ui-state-default month-col" id="res-{{resource.resourceId}}-{{month.resourceMonthId}}" *ngFor="let month of resource.resourceMonths.slice([fcol],[lcol])">
           <div (click)="editResource(resource)" title="Click to edit" class="resource-month">
-            <span *ngIf="!resource.editMode"> {{month.plannedEffort}}</span>
+            <div *ngIf="!resource.editMode"> {{month.plannedEffort}}</div>
             <input (blur)="updateResource($event, 'effortmonth', resource, month, i)" *ngIf="resource.editMode" name="resourceMonth"
               class="form-control" type="text" [value]="month.plannedEffort">
           </div>
@@ -131,12 +133,17 @@
       <!--  Begin fixed Cost -->
       <tr class="header-row">
 
-        <th>
-          <button class="btn btn-sm" tooltip="Add Fixed Cost">
-            <i class="fas fa-square-plus" (click)="addProjectFixedPrice()">add</i>
-          </button>
+        <th class="action-col">
+          <a class="btn btn-sm" tooltip="Add Fixed Cost" (click)="addProjectFixedPrice()">
+            <i class="fas fa-plus-square" ></i>
+          </a>
         </th>
-        <th colspan="5">Fixed Cost</th>
+     
+        <th class="fixed-col">Type</th>
+        <th class="fixed-col">Description</th>
+        <th class="fixed-col">Resource Type</th>
+        <th class="fixed-col">Vendor</th>
+        <th class="fixed-col"></th>
         <th class="month-col">Total</th>
         <th class="month-col" *ngFor="let month of project.months.slice([fcol],[lcol])"></th>
 
@@ -144,48 +151,48 @@
       <tr *ngFor="let fixedPrice of project.fixedPriceCosts let f = index" (blur)="alert('blur')">
         <th class="action">
           <a *ngIf="!fixedPrice.editMode" (click)="deleteFixedPrice(fixedPrice, f)">
-            <i class="fas fa-trash">delete</i>
+            <i class="fas fa-trash"></i>
           </a>
           <a *ngIf="!fixedPrice.editMode" (click)="editFixedPrice(fixedPrice, f)">
-            <i class="fas fa-edit">edit</i>
+            <i class="fas fa-edit"></i>
           </a>
           <a *ngIf="fixedPrice.editMode" (click)="saveFixedPriceEdit(fixedPrice, f)">
-            <i class="fas fa-save">save</i>
+            <i class="fas fa-save"></i>
           </a>
           <a *ngIf="fixedPrice.editMode" (click)="cancelFixedPriceEdit(fixedPrice, f)">
-            <i class="fas fa-ban">cancel</i>
+            <i class="fas fa-ban"></i>
           </a>
         </th>
-        <th (click)="editFixedPrice(fixedPrice, f)" title="Click to edit">
-          <span *ngIf="!fixedPrice.editMode"> {{fixedPrice.fixedPriceTypeName}}</span>
+        <th class="fixed-col" (click)="editFixedPrice(fixedPrice, f)" title="Click to edit">
+          <div class="fixed-col" *ngIf="!fixedPrice.editMode"> {{fixedPrice.fixedPriceTypeName}}</div>
           <select *ngIf="fixedPrice.editMode" class="form-control" (change)="updateFixedPrice($event, 'role', fixedPrice)">
             <option *ngFor="let type of fixedPriceTypeList" [value]="type.fixedPriceTypeId" [selected]="type.fixedPriceTypeId == fixedPrice.fixedPriceTypeId">{{type.fixedPriceTypeName}} </option>
           </select>
         </th>
-        <th (click)="editFixedPrice(fixedPrice, f)" title="Click to edit">
-          <span *ngIf="!fixedPrice.editMode"> {{fixedPrice.fixedPriceName}}</span>
+        <th class="fixed-col" (click)="editFixedPrice(fixedPrice, f)" title="Click to edit">
+          <div class="fixed-col" *ngIf="!fixedPrice.editMode"> {{fixedPrice.fixedPriceName}}</div>
           <input (blur)="updateFixedPrice($event, 'name', fixedPrice)" *ngIf="fixedPrice.editMode" name="fixedPriceName" class="form-control"
             type="text" [value]="fixedPrice.fixedPriceName" />
         </th>
 
-        <th (click)="editFixedPrice(fixedPrice, f)" title="Click to edit">
-          <span *ngIf="!fixedPrice.editMode"> {{fixedPrice.resourceTypeName}}</span>
+        <th class="fixed-col" (click)="editFixedPrice(fixedPrice, f)" title="Click to edit">
+          <div class="fixed-col" *ngIf="!fixedPrice.editMode"> {{fixedPrice.resourceTypeName}}</div>
           <select *ngIf="fixedPrice.editMode" class="form-control" (change)="updateFixedPrice($event, 'type', fixedPrice)">
             <option *ngFor="let type of resourceTypeList" [value]="type.resourceTypeId" [selected]="type.resourceTypeId == fixedPrice.resourceTypeId">{{type.resourceTypeName}} </option>
           </select>
         </th>
 
-        <th (click)="editFixedPrice(fixedPrice, f)" title="Click to edit" colspan="2">
-          <span *ngIf="!fixedPrice.editMode"> {{fixedPrice.vendor}}</span>
+        <th class="fixed-col" (click)="editFixedPrice(fixedPrice, f)" title="Click to edit" colspan="2">
+          <div class="fixed-col" *ngIf="!fixedPrice.editMode"> {{fixedPrice.vendor}}</div>
           <input (blur)="updateFixedPrice($event, 'vendor', fixedPrice)" *ngIf="fixedPrice.editMode" name="fixedPriceVendor" class="form-control"
             type="text" [value]="fixedPrice.vendor" />
         </th>
 
 
-        <th class="month-col">{{fixedPrice.totalPlannedCost}}</th>
-        <td class="ui-state-default month-col" id="{{fixedPrice.fixedPriceMonthId}}-{{month.monthId}}"  *ngFor="let month of fixedPrice.fixedPriceMonths.slice([fcol],[lcol])">
+        <th class="total-col">{{fixedPrice.totalPlannedCost}}</th>
+        <td class="ui-state-default month-col month-col" id="fix-{{fixedPrice.fixedPriceId}}-{{month.fixedPriceMonthId}}"  *ngFor="let month of fixedPrice.fixedPriceMonths.slice([fcol],[lcol])">
           <div (click)="editFixedPrice(fixedPrice, f)" title="Click to edit" class="fixedPrice-month">
-            <span *ngIf="!fixedPrice.editMode"> {{month.plannedCost}}</span>
+            <div *ngIf="!fixedPrice.editMode"> {{month.plannedCost}}</div>
             <input (blur)="updateFixedPrice($event, 'plannedcost', fixedPrice, month, f)" *ngIf="fixedPrice.editMode" name="fixedPriceMonth"
               class="form-control" type="text" [value]="month.plannedCost">
           </div>
@@ -195,14 +202,20 @@
       <tfoot>
         <tr class="footer-row">
           <th class="action-col"></th>
-          <th colspan="4">Total Planned Capital</th>
+          <th class="fixed-col">Total Planned Capital</th>
+          <th class="fixed-col"></th>
+          <th class="fixed-col"></th>
+          <th class="fixed-col"></th>
           <th class="total-col"></th>
           <th class="month-col"></th>
           <th class="month-col" *ngFor="let month of project.months.slice([fcol],[lcol])">{{month.totalPlannedCapital}}</th>
         </tr>
         <tr class="footer-row">
           <th class="action-col"></th>
-          <th colspan="4">Total Planned Expense</th>
+          <th class="fixed-col">Total Planned Expense</th>
+          <th class="fixed-col"></th>
+          <th class="fixed-col"></th>
+          <th class="fixed-col"></th>
           <th class="total-col"></th>
           <th class="month-col"></th>
           <th class="month-col" *ngFor="let month of project.months.slice([fcol],[lcol])">{{month.totalPlannedExpense}}</th>
@@ -211,10 +224,12 @@
           <th colspan="7"></th>
           <th [appColspan]="pageSize">
             <div *ngIf="showPaginator" class="pagination">
-              <a (click)="pageLeft()">&laquo;</a>
-              <a (click)="scrollLeft()">&lsaquo;</a>
-              <a (click)="scrollRight()">&rsaquo;</a>
-              <a (click)="pageRight()">&raquo;</a>
+              <a (click)="pageLeft()"><i class="fas fa-angle-double-left"></i></a>
+              <a (click)="scrollLeft()"><i class="fas fa-angle-left"></i></a>
+              <a>{{fcol + 1}}&nbsp;-{{lcol + 1}}&nbsp;of&nbsp;{{project.months.length + 1}}&nbsp;Months
+              </a>
+              <a (click)="scrollRight()"><i class="fas fa-angle-right"></i></a>
+              <a (click)="pageRight()"><i class="fas fa-angle-double-right"></i></a>
             </div>
           </th>
         </tr>

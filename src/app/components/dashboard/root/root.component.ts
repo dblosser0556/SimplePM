@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ConfigService, ErrorMsgService} from '../../../services';
+import { ConfigService, ErrorMsgService, ToastrType} from '../../../services';
 import { Subscription } from 'rxjs/Subscription';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import '../../../rxjs-extensions';
@@ -15,7 +15,7 @@ export class RootComponent implements OnInit, OnDestroy {
   subSideBarActiveStatus: Subscription;
   subErrors: Subscription;
   errorMsg: string;
-  inError = false;
+
 
   constructor(private config: ConfigService,
       private errMessageService: ErrorMsgService,
@@ -30,7 +30,7 @@ export class RootComponent implements OnInit, OnDestroy {
     this.subErrors = this.errMessageService.currentMessage.subscribe(
       message => {
         this.errorMsg =  message;
-        this.inError = true;
+        this.errMessageService.showUserMessage(ToastrType.warning, 'Oops - Something went wrong', this.errorMsg );
         console.log(this.errorMsg);
       });
 
@@ -50,7 +50,6 @@ export class RootComponent implements OnInit, OnDestroy {
     return this.active;
   }
 
-  
   ngOnDestroy() {
     this.subSideBarActiveStatus.unsubscribe();
   }

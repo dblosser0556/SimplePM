@@ -5,7 +5,7 @@ import {
   FixedPriceMonth
 } from '../../../../models';
 import { ProjectService } from '../../../configuration/project/project.service';
-import { ErrorMsgService} from '../../../../services';
+import { ErrorMsgService, ToastrType} from '../../../../services';
 import { UtilityService } from '../../../../services/utility.service';
 import { ElementRef } from '@angular/core/src/linker/element_ref';
 
@@ -19,6 +19,7 @@ import { ElementRef } from '@angular/core/src/linker/element_ref';
 export class ProjectMonthlyDetailComponent implements OnInit {
 
   @Input() project: Project;
+  @Input() tab: string;
   
 
 
@@ -58,6 +59,10 @@ export class ProjectMonthlyDetailComponent implements OnInit {
 
 
   ngOnInit() {
+    const actualHeight = window.innerHeight;
+    const actualWidth = window.innerWidth;
+    this.calcPageSize(actualWidth);
+    this.tab = 'Forecast';
 
   }
 
@@ -69,9 +74,9 @@ export class ProjectMonthlyDetailComponent implements OnInit {
   saveProject() {
     this.projectService.update(this.project.projectId, this.project).subscribe(
       results => {
-        // this.snackBar.open('Project has been updated', 'Hip Hip', {          duration: 3000        });
+        this.errors.showUserMessage(ToastrType.success, 'Congrates', 'Month has been added', false, 2000);
       },
-      errors => this.errors.changeMessage = errors
+      errors => this.errors.showUserMessage(ToastrType.warning, 'Oops - Bad on Me', errors)
     );
 
 
@@ -113,7 +118,9 @@ export class ProjectMonthlyDetailComponent implements OnInit {
       }
     }
 
-    // this.snackBar.open('Month has been added.', '', {      duration: 2000    });
+    const actualWidth = window.innerWidth;
+    this.calcPageSize(actualWidth);
+    this.errors.showUserMessage(ToastrType.success, 'Congrates', 'Month has been added', false, 2000);
 
   }
 
@@ -145,7 +152,7 @@ export class ProjectMonthlyDetailComponent implements OnInit {
       }
     }
 
-    //  this.snackBar.open('Resource has been added', '', {      duration: 2000    });
+    this.errors.showUserMessage(ToastrType.success, 'Congrates', 'Resource has been added', false, 2000);
 
   }
 
@@ -194,7 +201,7 @@ export class ProjectMonthlyDetailComponent implements OnInit {
       }
     }
 
-    // this.snackBar.open('FixedPrice has been added', '', {      duration: 2000    });
+    this.errors.showUserMessage(ToastrType.success, 'Congrates', 'Fixed Price Row has been added', false, 2000);
   }
 
   addFixedPriceMonth(projectFixedPrice: FixedPrice, monthNo: number) {
@@ -235,7 +242,7 @@ export class ProjectMonthlyDetailComponent implements OnInit {
       this.editingRow = index;
       this.savedResource = new Resource(resource);
     } else if (this.editingRow !== index) {
-      // this.snackBar.open('Can only edit one row at a time', '', {        duration: 2000      });
+      this.errors.showUserMessage(ToastrType.info, 'Sorry', 'Only one row at a time', false, 2000);
     }
 
   }
@@ -282,7 +289,7 @@ export class ProjectMonthlyDetailComponent implements OnInit {
 
   updateResource(event, cell, resource, month?, mIndex?) {
 
-    console.log('Got data ', event.target.value);
+
     switch (cell) {
       case 'resourceName':
         resource.resourceName = event.target.value;
@@ -328,7 +335,7 @@ export class ProjectMonthlyDetailComponent implements OnInit {
       this.editingRow = index;
       this.savedFixedPrice = new FixedPrice(fixedPrice);
     } else if (this.editingRow !== index) {
-      // this.snackBar.open('Can only edit one row at a time', '', {        duration: 2000      });
+      this.errors.showUserMessage(ToastrType.info, 'Sorry', 'Only one row at a time', false, 2000);
     }
 
   }
@@ -374,7 +381,7 @@ export class ProjectMonthlyDetailComponent implements OnInit {
 
   updateFixedPrice(event, cell, fixedPrice, month?, mIndex?) {
 
-    console.log('Got data ', event.target.value);
+
     switch (cell) {
       case 'name':
         fixedPrice.fixedPriceName = event.target.value;
@@ -406,7 +413,7 @@ export class ProjectMonthlyDetailComponent implements OnInit {
   updateMonthlyResourceTotal(resource: Resource) {
     let totalPlannedEffort = 0;
     let totalActualEffort = 0;
-    for (let month of resource.resourceMonths) {
+    for (const month of resource.resourceMonths) {
       totalPlannedEffort += month.plannedEffort;
       totalActualEffort += month.actualEffort;
     }
@@ -428,14 +435,14 @@ export class ProjectMonthlyDetailComponent implements OnInit {
   updateAllMonthlyTotals() {
     this.project.months.forEach(month => {
       this.updateMonthlyTotals(month.monthNo - 1);
-    })
+    });
   }
   // consider refactoring to be only for the current month.
   updateMonthlyTotals(i) {
 
     let totalActualExpense = 0;
     let totalActualCapital = 0;
-    let totalPlannedExpense = 0
+    let totalPlannedExpense = 0;
     let totalPlannedCapital = 0;
 
     for (const resource of this.project.resources) {
@@ -471,20 +478,20 @@ export class ProjectMonthlyDetailComponent implements OnInit {
       this.lcol++;
       this.fcol++;
     } else {
-      // this.snackBar.open('At the end!', '', {        duration: 2000      });
+      this.errors.showUserMessage(ToastrType.info, 'Sorry', 'At the end', false, 2000);
     }
 
   }
 
   pageRight() {
-    if (this.lcol + this.pageSize < this.project.months.length){
+    if (this.lcol + this.pageSize < this.project.months.length) {
       this.lcol += this.pageSize;
       this.fcol += this.pageSize;
     } else if (this.lcol < this.project.months.length) {
       this.lcol = this.project.months.length;
       this.fcol = this.lcol - this.pageSize;
     } else {
-      // this.snackBar.open('At the end!', '', {        duration: 2000      });
+      this.errors.showUserMessage(ToastrType.info, 'Sorry', 'At the end', false, 2000);
     }
       
   }
@@ -492,9 +499,9 @@ export class ProjectMonthlyDetailComponent implements OnInit {
   scrollLeft() {
     if (this.fcol > 1) {
       this.lcol--;
-      this.fcol++;
+      this.fcol--;
     } else {
-      // this.snackBar.open('At the end!', '', {        duration: 2000      });
+      this.errors.showUserMessage(ToastrType.info, 'Sorry', 'At the end', false, 2000);
     }
   }
 
@@ -506,7 +513,7 @@ export class ProjectMonthlyDetailComponent implements OnInit {
       this.lcol = this.pageSize;
       this.fcol = 0;
     } else {
-      // this.snackBar.open('At the end!', '', {        duration: 2000      });
+      this.errors.showUserMessage(ToastrType.info, 'Sorry', 'At the end', false, 2000);
     }
 
   }
@@ -517,9 +524,8 @@ export class ProjectMonthlyDetailComponent implements OnInit {
     const staticColWidth = 900;
     const staticMonthWidth = 75;
     this.pageSize = Math.floor((windowSize - staticColWidth) / staticMonthWidth);
-    console.log(this.pageSize);
 
-    if(this.lcol + this.pageSize) {
+    if ( this.lcol + this.pageSize ) {
       this.lcol = this.fcol + this.pageSize;
     } else {
       this.lcol = this.project.months.length;
@@ -537,7 +543,44 @@ export class ProjectMonthlyDetailComponent implements OnInit {
 
   }
 
+  updateCapWeightPercent(percent: number) {
+    // the ids are added to the selected ids array through the multi-select directive
+    // in the form type-typeId-monntid.  e.g. 'res-1-8' resource, resourceId,and resourceMonthId
+    // or 'fix-1-8' fixedprice, fixedPriceId, fixedPriceMonthId
+    console.log(this.selectedIds);
 
+    for (let cell of this.selectedIds) {
+      console.log(cell);
+      const cells = cell.split('-');
+      if (cells[0] === 'res') {
+        // go through the set of resoruce and months and update to percent 
+        this.project.resources.forEach(res => {
+          res.resourceMonths.forEach(mon => {
+            if (res.resourceId === Number(cells[1]) && mon.resourceMonthId === Number(cells[2])) {
+              (this.tab === 'Forecast' ) ? mon.plannedEffortCapPercent = percent :
+                mon.actualEffortCapPercent = percent;
+                console.log(cell, ' updated');
+            }
+          });
+        });
+
+      } else {
+
+        this.project.fixedPriceCosts.forEach(fix => {
+          fix.fixedPriceMonths.forEach(mon => {
+            if (fix.fixedPriceId === Number(cells[1]) && mon.fixedPriceMonthId === Number(cells[2])) {
+              (this.tab === 'Forecast' ) ? mon.plannedCostCapPercent = percent :
+                mon.actualCostCapPercent = percent;
+                console.log(cell, ' updated');
+            }
+          });
+        });
+
+      }
+      this.updateAllMonthlyTotals();
+
+    }
+  }
 
 
 }

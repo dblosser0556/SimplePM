@@ -28,13 +28,66 @@ export class Project {
         }
     }
 
+    startDate(): Date {
+        if (this.actualStartDate != null) {
+            return (this.getDate(this.actualStartDate));
+        } else {
+            return (this.getDate(this.plannedStartDate));
+        }
+    }
+
+    private getDate(_date: string) {
+        const _dates = _date.split('-');
+        const _year = Number(_dates[0]);
+        let _month = 1;
+        switch (_dates[1]) {
+            case 'Jan':
+                _month = 1;
+                break;
+            case 'Feb':
+                _month = 2;
+                break;
+            case 'Mar':
+                _month = 3;
+                break;
+            case 'Apr':
+                _month = 4;
+                break;
+            case 'May':
+                _month = 5;
+                break;
+            case 'Jun':
+                _month = 6;
+                break;
+            case 'Jul':
+                _month = 7;
+                break;
+            case 'Aug':
+                _month = 8;
+                break;
+            case 'Sep':
+                _month = 9;
+                break;
+            case 'Oct':
+                _month = 10;
+                break;
+            case 'Nov':
+                _month = 11;
+                break;
+            case 'Dec':
+                _month = 12;
+        }
+        return new Date(_year, _month, 1);
+
+    }
+
     private deserialize(instanceData: Project) {
         // Note this.active will not be listed in keys since it's declared, but not defined
         const keys = Object.keys(instanceData[0]);
 
         for (const key of keys) {
             {
-                let data = instanceData[0][key]
+                const data = instanceData[0][key];
                 switch (key) {
                     case 'fixedPriceCosts':
                         this.fixedPriceCosts = (data != null) ? data.map(d => new FixedPrice(d)) : [];
@@ -50,7 +103,7 @@ export class Project {
                         break;
                     default:
                         this[key] = data;
-                };
+                }
 
             }
         }

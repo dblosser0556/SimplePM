@@ -12,6 +12,7 @@ import { StatusService } from '../components/configuration/status/status.service
 import { GroupService } from '../components/configuration/group/group.service';
 import { ErrorMsgService } from './error-msg-service';
 
+
 @Injectable()
 export class UtilityService {
 
@@ -21,6 +22,8 @@ export class UtilityService {
   private _roleList: Role[];
   private _statusList: Status[];
   private _groupList: Group[];
+
+
 
   phaseListIsDirty = false;
   resourceTypeListIsDirty = false;
@@ -63,10 +66,10 @@ export class UtilityService {
           });
           this.phaseListIsDirty = false;
         },
-        error => {
-          this.errors.changeMessage(error);
+          error => {
+            this.errors.changeMessage(error);
 
-        });
+          });
     }
     return this._phaseList;
   }
@@ -87,7 +90,7 @@ export class UtilityService {
           });
           this.fixedPriceTypeListIsDirty = false;
         },
-        error => this.errors.changeMessage(error));
+          error => this.errors.changeMessage(error));
     }
     return this._fixedPriceTypeList;
   }
@@ -108,7 +111,7 @@ export class UtilityService {
           });
 
         },
-        error => this.errors.changeMessage(error));
+          error => this.errors.changeMessage(error));
 
       this.resourceTypeListIsDirty = false;
     }
@@ -154,7 +157,7 @@ export class UtilityService {
             return 0;
           });
         },
-        error => this.errors.changeMessage(error));
+          error => this.errors.changeMessage(error));
     }
     this.statusListIsDirty = false;
     return this._statusList;
@@ -175,7 +178,7 @@ export class UtilityService {
             return 0;
           });
         },
-        error => this.errors.changeMessage(error));
+          error => this.errors.changeMessage(error));
     }
     this.groupListIsDirty = false;
     return this._groupList;

@@ -3,14 +3,16 @@
 </h3>
 <div *ngIf="currentProject">
   <tabset>
-    <tab heading="Details" id="tab1">
+    <tab heading="Details" id="tab1" (select)="setCurrentTab($event)">
       <div class="container" style="background: white">
         <app-project-detail [(project)]="currentProject"></app-project-detail>
       </div>
     </tab>
-    <tab heading="Forecast" (select)="alertMe($event)">
-      <app-project-monthly-detail [project]="currentProject"></app-project-monthly-detail>
+    <tab heading="Forecast" (select)="setCurrentTab($event)">
+      <app-project-monthly-detail [project]="currentProject" [tab]="currentTab"></app-project-monthly-detail>
     </tab>
-    <tab heading="Actuals">Actuals to be implemented</tab>
+    <tab heading="Actuals" (select)="setCurrentTab($event)">
+    <app-project-monthly-detail [project]="currentProject" [tab]="currentTab"></app-project-monthly-detail>
+  </tab>
   </tabset>
 </div>

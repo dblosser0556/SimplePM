@@ -19,6 +19,7 @@ interface CreateProject {
   groupId: number;
   statusId: number;
 }
+
 @Component({
   selector: 'app-project-detail',
   templateUrl: './project-detail.component.html',

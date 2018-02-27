@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from '../../modules/shared.module';
 import { UserService } from '../../services';
 
@@ -14,7 +14,7 @@ import { LoginFormComponent } from './login-form/login-form.component';
 
 @NgModule({
   imports: [
-    CommonModule, FormsModule, routing, SharedModule
+    CommonModule, FormsModule, ReactiveFormsModule, routing, SharedModule
   ],
   declarations: [RegistrationFormComponent, EmailValidator, LoginFormComponent],
   providers:    [ UserService ]

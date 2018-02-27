@@ -8,9 +8,11 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpModule } from '@angular/http';
 import { HttpClientModule } from '@angular/common/http';
+import { BrowserAnimationsModule  } from '@angular/platform-browser/animations';
+import { ToastrModule } from 'ngx-toastr';
 import { myFocus } from '../directives/focus.directive';
 import { ColspanDirective } from '../directives/colspan.directive';
-// import { MultiselectDirective } from '../directives/mutliselect.directive';
+import { MultiselectDirective } from '../directives/multiselect.directive';
 
 import { SpinnerComponent } from '../components/spinner/spinner.component';
 import { ErrorMsgService, ConfigService, UserService} from '../services';
@@ -18,9 +20,9 @@ import { UtilityService } from '../services/utility.service';
 
 
 @NgModule({
-  imports:      [CommonModule, HttpClientModule],
-  declarations: [myFocus, ColspanDirective, SpinnerComponent],
-  exports:      [myFocus, ColspanDirective, SpinnerComponent],
+  imports:      [CommonModule, HttpClientModule, ToastrModule.forRoot(), BrowserAnimationsModule],
+  declarations: [myFocus, ColspanDirective, SpinnerComponent, MultiselectDirective],
+  exports:      [myFocus, ColspanDirective, SpinnerComponent, MultiselectDirective],
   providers:    [ErrorMsgService, ConfigService, UserService, UtilityService]
 })
 export class SharedModule { }

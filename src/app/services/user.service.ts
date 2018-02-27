@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import '../rxjs-extensions';
-
+import { UserRegistration } from '../models';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Router } from '@angular/router';
@@ -22,8 +22,8 @@ export class UserService  {
 
   constructor(private http: HttpClient, private router: Router) { }
 
-  register(email: string, password: string, firstName: string, lastName: string) {
-    const body = JSON.stringify({ email, password, firstName, lastName });
+  register(user: UserRegistration) {
+    const body = JSON.stringify(user);
     const headerOptions = new HttpHeaders()
                     .set('Content-Type', 'application/json');
     return this.http.post(this._url + '/accounts', body, {headers: headerOptions, responseType: 'text'})
@@ -71,15 +71,17 @@ export class UserService  {
 
 
   private handleAuthError(err: HttpErrorResponse): Observable<any> {
+    const errMsg = JSON.parse(err.error);
     // handle your auth error or rethrow
     if (err.status === 400 || err.status === 401 || err.status === 403) {
         // navigate /delete cookies or whatever
         this.router.navigateByUrl('/login');
         // tslint:disable-next-line:max-line-length
         // if you've caught / handled the error, you don't want to rethrow it unless you also want downstream consumers to have to handle it as well.
-        return Observable.of(err.message);
+        
+        return Observable.throw(errMsg);
     }
-    return Observable.throw(err.message);
+    return Observable.throw(errMsg);
   }
 }
 
