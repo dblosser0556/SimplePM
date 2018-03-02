@@ -4,9 +4,12 @@ export class ResourceMonth {
     monthNo: number = null;
     plannedEffort: number = null;
     plannedEffortCapPercent: number = null;
+    plannedEffortStyle: number = null;
+    plannedEffortInError: boolean = false;
     actualEffort: number = null;
     actualEffortCapPercent: number = null;
-    
+    actualEffortStyle: number = null;
+    actualEffortInError: boolean = false;
     
 
     resourceId: number = null;

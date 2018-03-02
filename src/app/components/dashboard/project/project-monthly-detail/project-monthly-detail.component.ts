@@ -2,12 +2,14 @@ import { Component, OnInit, Input, HostListener, ViewChild } from '@angular/core
 import {
   Project, Resource, ResourceMonth, Month,
   Phase, ResourceType, FixedPriceType, Role, FixedPrice,
-  FixedPriceMonth
+  FixedPriceMonth,
+  CapWeightPercent
 } from '../../../../models';
 import { ProjectService } from '../../../configuration/project/project.service';
 import { ErrorMsgService, ToastrType} from '../../../../services';
 import { UtilityService } from '../../../../services/utility.service';
 import { ElementRef } from '@angular/core/src/linker/element_ref';
+import { ConfigService } from '../../../../services/config.service';
 
 
 
@@ -19,7 +21,7 @@ import { ElementRef } from '@angular/core/src/linker/element_ref';
 export class ProjectMonthlyDetailComponent implements OnInit {
 
   @Input() project: Project;
-  @Input() tab: string;
+  @Input() selectedView: string;
   
 
 
@@ -27,7 +29,9 @@ export class ProjectMonthlyDetailComponent implements OnInit {
   resourceTypeList: ResourceType[] = [];
   fixedPriceTypeList: FixedPriceType[] = [];
   roleList: Role[] = [];
-  selectedIds = [];
+  selectedCells = [];
+
+  menuItems: CapWeightPercent[] = [];
 
   savedResource: Resource;
   savedFixedPrice: FixedPrice;
@@ -48,7 +52,8 @@ export class ProjectMonthlyDetailComponent implements OnInit {
   constructor(
     private projectService: ProjectService,
     private errors: ErrorMsgService,
-    private util: UtilityService) {
+    private util: UtilityService,
+    private config: ConfigService) {
 
     this.phaseList = this.util.getPhaseList();
     this.fixedPriceTypeList = this.util.getFixedPriceTypeList();
@@ -62,19 +67,23 @@ export class ProjectMonthlyDetailComponent implements OnInit {
     const actualHeight = window.innerHeight;
     const actualWidth = window.innerWidth;
     this.calcPageSize(actualWidth);
-    this.tab = 'Forecast';
+    this.selectedView = 'Forecast';
+    this.menuItems = this.config.capWeightConfig;
 
   }
 
   
-  getSelectedIds(event) {
-    this.selectedIds = event;
+  getSelectedCells(event) {
+    // this get the set of cells that are selected in the month columns
+    // using the multiselected cell directive.  
+    // It returns a set of TD elememnts
+    this.selectedCells = event;
   }
   
   saveProject() {
     this.projectService.update(this.project.projectId, this.project).subscribe(
       results => {
-        this.errors.showUserMessage(ToastrType.success, 'Congrates', 'Month has been added', false, 2000);
+        this.errors.showUserMessage(ToastrType.success, 'Congrates', 'Project has been saved', false, 2000);
       },
       errors => this.errors.showUserMessage(ToastrType.warning, 'Oops - Bad on Me', errors)
     );
@@ -542,45 +551,5 @@ export class ProjectMonthlyDetailComponent implements OnInit {
 
 
   }
-
-  updateCapWeightPercent(percent: number) {
-    // the ids are added to the selected ids array through the multi-select directive
-    // in the form type-typeId-monntid.  e.g. 'res-1-8' resource, resourceId,and resourceMonthId
-    // or 'fix-1-8' fixedprice, fixedPriceId, fixedPriceMonthId
-    console.log(this.selectedIds);
-
-    for (let cell of this.selectedIds) {
-      console.log(cell);
-      const cells = cell.split('-');
-      if (cells[0] === 'res') {
-        // go through the set of resoruce and months and update to percent 
-        this.project.resources.forEach(res => {
-          res.resourceMonths.forEach(mon => {
-            if (res.resourceId === Number(cells[1]) && mon.resourceMonthId === Number(cells[2])) {
-              (this.tab === 'Forecast' ) ? mon.plannedEffortCapPercent = percent :
-                mon.actualEffortCapPercent = percent;
-                console.log(cell, ' updated');
-            }
-          });
-        });
-
-      } else {
-
-        this.project.fixedPriceCosts.forEach(fix => {
-          fix.fixedPriceMonths.forEach(mon => {
-            if (fix.fixedPriceId === Number(cells[1]) && mon.fixedPriceMonthId === Number(cells[2])) {
-              (this.tab === 'Forecast' ) ? mon.plannedCostCapPercent = percent :
-                mon.actualCostCapPercent = percent;
-                console.log(cell, ' updated');
-            }
-          });
-        });
-
-      }
-      this.updateAllMonthlyTotals();
-
-    }
-  }
-
 
 }

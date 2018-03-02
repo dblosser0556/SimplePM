@@ -1,13 +1,19 @@
+
 export class FixedPriceMonth {
     fixedPriceMonthId: number = null;
-    
     monthNo: number = null;
     plannedCost: number  = null;
     plannedCostCapPercent: number  = null;
+    plannedCostStyle: number = null;
+    plannedCostCapInError: boolean = false;
     actualCost: number  = null;
     actualCostCapPercent: number  = null;
-
+    actualCostStyle: number = null;
+    actualCostInError: boolean = false;
     fixedPriceId: number = null;
+
+    
+    
     constructor(protected data?: FixedPriceMonth) {
         if (data) {
             this.deserialize(data);

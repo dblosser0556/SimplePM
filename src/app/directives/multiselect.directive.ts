@@ -9,12 +9,12 @@ export class MultiselectDirective {
   dragging = false;
   finalCell = null;
   cntrlPressed = false;
-  multiCellIds = [];
+  multiCells = [];
 
   constructor(private el: ElementRef) {
   }
 
-  @Output() selectedIds = new EventEmitter<string[]>();
+  @Output() selectedCells = new EventEmitter<any[]>();
 
   @HostListener('mousedown', ['$event.target', '$event.which']) onMouseDown(el, button) {
 
@@ -34,7 +34,7 @@ export class MultiselectDirective {
     this.dragging = false;
     this.finalCell = this.findTD(el);
     this.setSelectedCells(this.startCell, this.finalCell);
-    this.selectedIds.emit(this.multiCellIds);
+    this.selectedCells.emit(this.multiCells);
     this.startCell = null;
   }
 
@@ -105,8 +105,8 @@ export class MultiselectDirective {
         el.classList.add('eng-selected-item');
         el.classList.remove('hover-area');
 
-        if (this.multiCellIds.indexOf(el.attributes['id'].nodeValue === -1)) {
-          this.multiCellIds.push(el.attributes['id'].nodeValue);
+        if (this.multiCells.indexOf(el.attributes['id'].nodeValue === -1)) {
+          this.multiCells.push(el);
         }
       });
     }
@@ -135,7 +135,7 @@ export class MultiselectDirective {
   }
 
   clearCells() {
-    this.multiCellIds = [];
+    this.multiCells = [];
     Array.prototype.forEach.call(this.el.nativeElement.querySelectorAll('td'), td => {
       td.classList.remove('eng-selected-item');
       td.classList.remove('hover-area');
@@ -162,6 +162,7 @@ export class MultiselectDirective {
 
       return el.parentElement.parentElement.parentElement;
     } else {
+
       return el;
     }
   }

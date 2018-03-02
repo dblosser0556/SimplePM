@@ -1,5 +1,6 @@
 
 
+
 .table-sm {
   font-size: .7rem;
   table-layout: fixed;
@@ -87,16 +88,37 @@ select.form-control {
 	border-top-right-radius: 5px;
 	border-bottom-right-radius: 5px;
 }
-
-.footer-row {
+.header-row-forecast { 
   background: #7386D5;
   color: #fff;
 }
 
-.header-row { 
+.sub-header-row-forecast { 
+  background: rgb(154, 167, 216);
+  color: #fff;
+}
+
+.footer-row-forecast {
   background: #7386D5;
   color: #fff;
 }
+
+.header-row-actual { 
+  background: rgb(81, 150, 113);
+  color: #fff;
+}
+
+.sub-header-row-actual { 
+  background: rgb(106, 148, 125);
+  color: #fff;
+}
+
+.footer-row-actual {
+  background: rgb(81, 150, 113);
+  color: #fff;
+}
+
+
 
 // handling the css for the multiselect
 td:hover {
@@ -111,13 +133,19 @@ td {
   text-align: center;
   font-weight: normal;
   color: #858584;
+  padding: 0px;
 }
 
 th {
   text-align: center;
   font-weight: bolder;
   color: #2c2c2c;
+  padding: 0px;
 }
+[multi-cell-select] div {
+  padding: 2px;
+}
+
 [multi-cell-select] {
   cursor: pointer;
   -webkit-touch-callout: none;
@@ -129,11 +157,11 @@ th {
 }
 
 [multi-cell-select] .eng-selected-item {
-  background: #007AFF;
-  color: white;
+  background: #007AFF !important; 
+  color: white !important;
   border-bottom-color: #007AFF;
   border: #007AFF;
-}
+} 
 
 [multi-cell-select] .hover-area {
   background: #8deaed;
@@ -152,6 +180,61 @@ th {
   background: #eee;
   background: -moz-linear-gradient(#eee, #e2e2e2);
   // box-shadow: inset 0 0 0 1px #aaa;
-  color: #5A5757;
-  text-align: center;
+  //color: #5A5757;
+  //text-align: center;
 }
+
+[multi-cell-select] .fontcolor1 {
+  // DARKGREY
+  background-color: #34495e;
+  color: #ecf0f1;
+}
+
+[multi-cell-select].fontcolor2 {
+  // GREEN
+  background-color: #229954;
+  color: #ecf0f1;
+}
+
+
+
+[multi-cell-select] .fontcolor3 {
+  // BLUE
+  background-color: #2471a3;
+  color: #ecf0f1;
+}
+
+[multi-cell-select] .fontcolor4 {
+  // PURPLE
+  background-color: #8e44ad;
+  color: #ecf0f1;
+}
+
+
+[multi-cell-select] .fontcolor5 {
+  // BURNT-ORANGE
+  background-color: #16a085;
+  color: rgb(240, 241, 190);
+}
+
+[multi-cell-select] .fontcolor6 {
+  // RED
+  background-color: #c03928;
+  color: #ecf0f1;
+}
+
+[multi-cell-select] .error {
+  background-color: darkred;
+}
+/*
+GREY: '#95a5a6';
+OFFWHITE = '#ecf0f1';
+BURNTORANGE = '#d35400';
+ORANGE = '#f39c12';
+GREEN = '#229954';
+LIGHTGRE = '#17a589';
+BLUE = '#2471a3';
+PURPLE = '#884ea0';
+RED = '#a93226';
+DARKGREY = '#34495e';
+*/

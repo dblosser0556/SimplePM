@@ -11,7 +11,8 @@ export class ColspanDirective implements OnInit{
   @HostListener('window:resize', ['$event'])
   onResize(event) {
     if (this._colSpanCount !== this.colSpanCount) {
-      this.renderer.setElementAttribute(this.el.nativeElement,'colspan', this.colSpanCount);
+      const _colSpan = (Number(this.colSpanCount) - 1).toString();
+      this.renderer.setElementAttribute(this.el.nativeElement, 'colspan', _colSpan);
       this._colSpanCount = this.colSpanCount;
     }
     
@@ -20,7 +21,8 @@ export class ColspanDirective implements OnInit{
 
 
     ngOnInit() {
-      this.renderer.setElementAttribute(this.el.nativeElement,'colspan', this.colSpanCount);
+      const _colSpan = (Number(this.colSpanCount) - 1).toString();
+      this.renderer.setElementAttribute(this.el.nativeElement, 'colspan', _colSpan);
       this._colSpanCount = this.colSpanCount;
     }    
 

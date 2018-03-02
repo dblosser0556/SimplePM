@@ -56,8 +56,8 @@ export class ProjectComponent implements OnInit {
 
   }
   
-  setCurrentTab(event: any) {
-    this.currentTab = event.heading;
+  setCurrentTab(tab: string) {
+    this.currentTab = tab;
   }
 
 }

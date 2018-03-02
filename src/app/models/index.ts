@@ -6,6 +6,7 @@ export * from './loggedInUser';
 export * from './phase';
 export * from './project-status';
 export * from './resource-type';
+export * from './cap-weight-percent';
 
 export * from './project';
 export * from './projectlist.interface';
@@ -17,3 +18,4 @@ export * from './budget';
 export * from './fixed-price-type';
 export * from './fixed-price';
 export * from './fixed-price-month';
+

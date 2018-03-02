@@ -1,18 +1,33 @@
-<h3 *ngIf="isLoading">
+<h1 *ngIf="isLoading">
   <i>Loading project ... </i>
-</h3>
-<div *ngIf="currentProject">
-  <tabset>
-    <tab heading="Details" id="tab1" (select)="setCurrentTab($event)">
-      <div class="container" style="background: white">
+</h1>
+<div class="container-fluid" *ngIf="currentProject">
+  <!-- <div>
+    <button class="btn btn-primary" (click)="setCurrentTab('Details')">Details</button>
+    <button class="btn btn-primary" (click)="setCurrentTab('Forecast')">Forecast</button>
+    <button class="btn btn-primary" (click)="setCurrentTab('Actuals')">Actuals</button>
+  </div>
+  <div class="container-fluid" *ngIf="currentTab=='Details'">
+      <app-project-detail [(project)]="currentProject"></app-project-detail>
+  </div>
+  <div class="container-fluid" *ngIf="currentTab=='Forecast'">
+      <app-project-monthly-detail [(project)]="currentProject" [selectedView]="currentTab"></app-project-monthly-detail>
+  </div>
+  <div class="container-fluid" *ngIf="currentTab=='Actuals'">
+      <app-project-monthly-detail [(project)]="currentProject" [selectedView]="currentTab"></app-project-monthly-detail>
+  </div>
+ -->
+ <tabset>
+    <tab heading="Details" (select)="setCurrentTab('Details')" id="tab1">
         <app-project-detail [(project)]="currentProject"></app-project-detail>
-      </div>
     </tab>
-    <tab heading="Forecast" (select)="setCurrentTab($event)">
-      <app-project-monthly-detail [project]="currentProject" [tab]="currentTab"></app-project-monthly-detail>
+    <tab heading="Forecast" (select)="setCurrentTab('Forecast')">
+        <app-project-monthly-detail [(project)]="currentProject" [selectedView]="currentTab"></app-project-monthly-detail>
+
     </tab>
-    <tab heading="Actuals" (select)="setCurrentTab($event)">
-    <app-project-monthly-detail [project]="currentProject" [tab]="currentTab"></app-project-monthly-detail>
-  </tab>
+    <tab heading="Actuals" (select)="setCurrentTab('Actuals')">
+        <app-project-monthly-detail [(project)]="currentProject" [selectedView]="currentTab"></app-project-monthly-detail>
+    </tab>
+    
   </tabset>
 </div>
