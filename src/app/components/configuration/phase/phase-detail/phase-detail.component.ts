@@ -75,7 +75,7 @@ export class PhaseDetailComponent implements OnInit, OnChanges {
     let phase: Phase;
     phase = new Phase();
 
-    phase.phaseId = formValue.phaseID;
+    phase.phaseId = formValue.phaseId;
     phase.phaseName = formValue.phaseName;
     phase.phaseDesc = formValue.phaseDesc;
     return phase;
@@ -84,7 +84,7 @@ export class PhaseDetailComponent implements OnInit, OnChanges {
 
   createForm() {
     this.phaseForm = this.fb.group({
-      phaseID: '',
+      phaseId: '',
       phaseName: ['', Validators.required],
       phaseDesc: ''
     }

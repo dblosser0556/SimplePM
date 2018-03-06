@@ -1,0 +1,56 @@
+<div class="container" fxLayout="column" fxLayoutGap="20px">
+  <div class="card">
+    <div class="card-body">
+      <div *ngIf="isLoading">Loading User List ...</div>
+      <table class="table" *ngIf="!isLoading">
+        <tr>
+          <td>UserName</td>
+          <td>First Name</td>
+          <td>Last Name</td>
+          <td>Email</td>
+          <td>Roles</td>
+          <td>Edit</td>
+          <td>Delete</td>
+        </tr>
+        <tr *ngFor="let user of users">
+          <td>
+            {{user.userName}}
+          </td>
+          <td>
+            {{user.userFirstName}}
+          </td>
+          <td>
+            {{user.userLastName}}
+          </td>
+          <td>
+            {{user.userEmail}}
+          </td>
+          <td>
+            {{user.roles}}
+          </td>
+          <td>
+
+            <a (click)="edit(user)">
+              <i class="fas fa-edit"></i>
+            </a>
+          </td>
+          <td>
+            <a ref (click)="onDelete(user.userId)">
+              <i class="fas fa-trash"></i>
+            </a>
+          </td>
+        </tr>
+
+      </table>
+      <div class="card-body">
+        <button class="btn btn-primary" (click)="add()">
+          <i class="fas fa-plus-square"></i>Add New</button>
+      </div>
+    </div>
+  </div>
+  <div class="card" *ngIf="selectedUser">
+    <div class="card-body">
+      <app-registration-form [user]="selectedUser" (userChange)="updateList($event)"></app-registration-form>
+    </div>
+  </div>
+</div>
