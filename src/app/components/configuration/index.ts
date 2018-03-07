@@ -16,6 +16,9 @@ import { ResourceTypeDetailComponent } from './resource-type/resource-type-detai
 
 import { ProjectComponent } from './project/project.component';
 
+import { AccountListComponent } from './account/account-list.component';
+import { RegistrationFormComponent } from './account/registration-form/registration-form.component';
+
 import { RootComponent } from './root/root.component';
 
 
@@ -23,6 +26,8 @@ import { GroupComponent } from './group/group.component';
 
 export {
     RootComponent,
+    AccountListComponent,
+    RegistrationFormComponent,
     PhaseListComponent,
     PhaseDetailComponent,
     FixedPriceTypeComponent,
@@ -39,6 +44,8 @@ export {
 
 export default [
     RootComponent,
+    AccountListComponent,
+    RegistrationFormComponent,
     PhaseListComponent,
     PhaseDetailComponent,
     FixedPriceTypeComponent,

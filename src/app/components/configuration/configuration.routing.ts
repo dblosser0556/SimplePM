@@ -9,7 +9,10 @@ import {
     StatusComponent,
     ResourceTypeComponent,
     ProjectComponent,
+    AccountListComponent
  } from '../configuration';
+
+
 
     export const routing: ModuleWithProviders = RouterModule.forChild([
         {
@@ -24,6 +27,7 @@ import {
             { path: 'fixedpricetype', component: FixedPriceTypeComponent, data: {'title': 'Fixed Price Types'} },
             { path: 'status', component: StatusComponent, data: {'title': 'Status'} },
             { path: 'resourcetype', component: ResourceTypeComponent, data: {'title': 'Resource Types'} },
+            { path: 'accounts', component: AccountListComponent, data: {'title': 'Configure Users'}},
          
 
           ]

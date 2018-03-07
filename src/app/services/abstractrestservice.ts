@@ -22,6 +22,8 @@ export abstract class AbstractRestService<T> {
             );
     }
 
+  
+
     getOne(id: number): Observable<T> {
         const url = `${this.actionUrl}/${id}`;
         const headerOptions = this.getHeader();

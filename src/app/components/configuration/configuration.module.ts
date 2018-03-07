@@ -19,6 +19,7 @@ import { GroupService } from './group/group.service';
 import { ResourceTypeService } from './resource-type/resource-type.service';
 import { ProjectService } from './project/project.service';
 import { PhaseService } from './phase/phase.service';
+import { UserService } from '../../services';
 
 
 import {
@@ -33,7 +34,9 @@ import {
   FixedPriceTypeDetailComponent,
   RoleDetailComponent,
   StatusDetailComponent,
-  ResourceTypeDetailComponent
+  ResourceTypeDetailComponent,
+  AccountListComponent,
+  RegistrationFormComponent
 
 
 } from '../configuration';
@@ -51,9 +54,6 @@ import { GroupComponent } from './group/group.component';
     SharedModule,
     ReactiveFormsModule,
     AppBootstrapModule,
-   /*  BsDropdownModule,
-    AlertModule,
-    BsDatepickerModule, */
     ProjectDetailModule
   ],
   declarations: [
@@ -69,7 +69,9 @@ import { GroupComponent } from './group/group.component';
     RoleDetailComponent,
     StatusDetailComponent,
     ResourceTypeDetailComponent,
-    GroupComponent
+    GroupComponent,
+    AccountListComponent,
+    RegistrationFormComponent
   ],
   providers: [
     PhaseService,

@@ -20,8 +20,7 @@ export class UtilityService {
   private _resourceTypeList: ResourceType[];
   private _fixedPriceTypeList: FixedPriceType[];
   private _roleList: Role[];
-  private _statusList: Status[];
-  private _groupList: Group[];
+
 
 
 
@@ -40,11 +39,12 @@ export class UtilityService {
     private roleService: RoleService,
     private groupService: GroupService,
     private statusService: StatusService,
-    private errors: ErrorMsgService) {
+    private errMsg: ErrorMsgService) {
     this._phaseList = this.getPhaseList();
     this._fixedPriceTypeList = this.getFixedPriceTypeList();
     this._resourceTypeList = this.getResourceTypeList();
     this._roleList = this.getRoles();
+
   }
 
   // Get all of the codes
@@ -67,7 +67,7 @@ export class UtilityService {
           this.phaseListIsDirty = false;
         },
           error => {
-            this.errors.changeMessage(error);
+            this.errMsg.changeMessage(error);
 
           });
     }
@@ -90,7 +90,7 @@ export class UtilityService {
           });
           this.fixedPriceTypeListIsDirty = false;
         },
-          error => this.errors.changeMessage(error));
+          error => this.errMsg.changeMessage(error));
     }
     return this._fixedPriceTypeList;
   }
@@ -111,7 +111,7 @@ export class UtilityService {
           });
 
         },
-          error => this.errors.changeMessage(error));
+          error => this.errMsg.changeMessage(error));
 
       this.resourceTypeListIsDirty = false;
     }
@@ -133,59 +133,14 @@ export class UtilityService {
           return 0;
         });
 
-
+        this.roleListIsDirty = false;
       },
-        error => this.errors.changeMessage(error));
-
-      this.roleListIsDirty = false;
+        error => this.errMsg.changeMessage(error));
     }
     return this._roleList;
   }
 
-  getStatusList() {
-    if (this._statusList === undefined || this.statusListIsDirty) {
-      this.statusService.getAll()
-        .subscribe(results => {
-          this._statusList = results;
-          const status = new Status();
-          status.statusId = -1;
-          status.statusName = '--Select--';
-          this._statusList.push(status);
-          this._statusList.sort((leftSide, rightSide): number => {
-            if (leftSide.statusId < rightSide.statusId) { return -1; }
-            if (leftSide.statusId > rightSide.statusId) { return 1; }
-            return 0;
-          });
-        },
-          error => this.errors.changeMessage(error));
-    }
-    this.statusListIsDirty = false;
-    return this._statusList;
-  }
-
-  getGroupList() {
-    if (this._groupList === undefined || this.groupListIsDirty) {
-      this.groupService.getAll()
-        .subscribe(results => {
-          this._groupList = results;
-          const group = new Group();
-          group.groupId = -1;
-          group.groupName = '--Select--';
-          this._groupList.push(group);
-          this._groupList.sort((leftSide, rightSide): number => {
-            if (leftSide.groupId < rightSide.groupId) { return -1; }
-            if (leftSide.groupId > rightSide.groupId) { return 1; }
-            return 0;
-          });
-        },
-          error => this.errors.changeMessage(error));
-    }
-    this.groupListIsDirty = false;
-    return this._groupList;
-
-  }
-
-
+ 
 
   findRoleName(projectRoleId: number) {
     if (this._roleList === undefined ||
@@ -239,30 +194,6 @@ export class UtilityService {
     return '';
   }
 
-  findStatusName(statusId: number) {
-    if (this._statusList === undefined ||
-      this._statusList === null) {
-      this.getStatusList();
-    }
-    for (const status of this._statusList) {
-      if (statusId === status.statusId) {
-        return status.statusName;
-      }
-    }
-    return '';
-  }
-
-  findGroupName(groupId: number) {
-    if (this._groupList === undefined ||
-      this._groupList === null) {
-      this.getStatusList();
-    }
-    for (const group of this._groupList) {
-      if (groupId === group.groupId) {
-        return group.groupName;
-      }
-    }
-    return '';
-  }
+ 
 
 }

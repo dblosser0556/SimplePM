@@ -1,12 +1,8 @@
 
 import { Component, OnInit, Input, OnChanges, Output, EventEmitter  } from '@angular/core';
 import { ProjectService } from '../configuration/project/project.service';
-import { StatusService } from '../configuration/status/status.service';
-import { GroupService } from '../configuration/group/group.service';
-import { UtilityService } from '../../services/utility.service';
-import { Project, Status, Group } from './../../models';
+import { Project, Status, Group, Role } from './../../models';
 import { FormBuilder, FormGroup, Validators, FormControl, AbstractControl } from '@angular/forms';
-import { Observable } from 'rxjs/Observable';
 import { ErrorMsgService } from './../../services';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 
@@ -28,10 +24,12 @@ interface CreateProject {
 export class ProjectDetailComponent implements OnInit, OnChanges {
 
   @Input() project: Project;
+  @Input() statusList: Status[];
+  @Input()  groupList: Group[];
   @Output() projectChange = new EventEmitter<Project>();
 
-  statusList: Status[];
-  groupList: Group[];
+
+
 
   projectForm: FormGroup;
   error: any;
@@ -40,15 +38,12 @@ export class ProjectDetailComponent implements OnInit, OnChanges {
 
   constructor(private projectService: ProjectService,
     private fb: FormBuilder,
-    private errors: ErrorMsgService,
-    private util: UtilityService) {
+    private errMsg: ErrorMsgService) {
 
       this.createForm();
      }
 
   ngOnInit() {
-    this.statusList = this.util.getStatusList();
-    this.groupList = this.util.getGroupList();
     this.bsConfig = Object.assign({}, { containerClass: this.colorTheme,
                                         dateInputFormat: 'YYYY-MM-DD'});
   }
@@ -76,10 +71,10 @@ export class ProjectDetailComponent implements OnInit, OnChanges {
     const project: Project = this.getProjectFromFormValue(this.projectForm.value);
     if (project.projectId !== null) {
       this.projectService.update(project.projectId, project).subscribe(data => {
-       
+
         this.projectChange.emit(project);
       },
-      error => this.errors.changeMessage(error));
+      error => this.errMsg.changeMessage(error));
     } else {
       const newProject: CreateProject = {
             projectName: project.projectName,
@@ -93,10 +88,10 @@ export class ProjectDetailComponent implements OnInit, OnChanges {
       this.projectService.create(JSON.stringify(newProject)).subscribe(data => {
         // this.resetForm();
         this.project = data;
-       
+
         this.projectChange.emit(project);
       },
-      error => this.errors.changeMessage(error));
+      error => this.errMsg.changeMessage(error));
     }
   }
 
@@ -136,6 +131,6 @@ export class ProjectDetailComponent implements OnInit, OnChanges {
 
   cancel() { this.projectChange.emit(this.project); }
 
- 
+
 
 }

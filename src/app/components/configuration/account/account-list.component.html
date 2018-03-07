@@ -8,7 +8,6 @@
           <td>First Name</td>
           <td>Last Name</td>
           <td>Email</td>
-          <td>Roles</td>
           <td>Edit</td>
           <td>Delete</td>
         </tr>
@@ -17,17 +16,15 @@
             {{user.userName}}
           </td>
           <td>
-            {{user.userFirstName}}
+            {{user.firstName}}
           </td>
           <td>
-            {{user.userLastName}}
+            {{user.lastName}}
           </td>
           <td>
-            {{user.userEmail}}
+            {{user.email}}
           </td>
-          <td>
-            {{user.roles}}
-          </td>
+          
           <td>
 
             <a (click)="edit(user)">
@@ -50,7 +47,7 @@
   </div>
   <div class="card" *ngIf="selectedUser">
     <div class="card-body">
-      <app-registration-form [user]="selectedUser" (userChange)="updateList($event)"></app-registration-form>
+      <app-registration-form [user]="selectedUser" [roles]="roleList" (userChange)="updateList($event)"></app-registration-form>
     </div>
   </div>
 </div>

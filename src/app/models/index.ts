@@ -3,6 +3,8 @@ export * from './credentials.interface';
 export * from './user';
 export * from './role';
 export * from './loggedInUser';
+export * from './user-role';
+
 export * from './phase';
 export * from './project-status';
 export * from './resource-type';

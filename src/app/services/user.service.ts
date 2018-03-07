@@ -12,8 +12,8 @@ export class UserService {
   loggedIn = false;
   loggedInUser: LoggedInUser;
   authorityToken: string;
-  users: LoggedInUser[];
-  roles: string[];
+  users: User[] = [];
+  roles: any;
 
 
   // Observable navItem source
@@ -23,11 +23,20 @@ export class UserService {
 
   constructor(private http: HttpClient, private router: Router) { }
 
-  register(user: UserRegistration) {
+  register(user: LoggedInUser) {
     const body = JSON.stringify(user);
     const headerOptions = new HttpHeaders()
       .set('Content-Type', 'application/json');
     return this.http.post(this._url + '/accounts', body, { headers: headerOptions, responseType: 'text' })
+      .map(res => true)
+      .catch(x => this.handleAuthError(x));
+  }
+
+  update(id: string, user: LoggedInUser) {
+    const body = JSON.stringify(user);
+    const headerOptions = new HttpHeaders()
+      .set('Content-Type', 'application/json');
+    return this.http.put(this._url + '/accounts/' + id, body, { headers: headerOptions, responseType: 'text' })
       .map(res => true)
       .catch(x => this.handleAuthError(x));
   }
@@ -53,17 +62,20 @@ export class UserService {
     const headerOptions = new HttpHeaders()
       .set('Content-Type', 'application/json')
       .set('Authorization', 'Bearer ' + authToken);
-    return this.http.get<User>(this._url + '/accounts/user/' + userName, { headers: headerOptions })
+    return this.http.get<LoggedInUser>(this._url + '/accounts/user/' + userName, { headers: headerOptions })
       .map(res => {
-        const _loggedInUser = new LoggedInUser();
-        _loggedInUser.currentUser.email = res.currentUser.email;
+        let _loggedInUser = new LoggedInUser();
+      /*   _loggedInUser.currentUser.email = res.currentUser.email;
         _loggedInUser.currentUser.firstName = res.currentUser.firstName;
         _loggedInUser.currentUser.lastName = res.currentUser.lastName;
         _loggedInUser.currentUser.userId = res.currentUser.userId;
         _loggedInUser.currentUser.password = res.currentUser.password;
-        _loggedInUser.roles = res.roles;
+        _loggedInUser.currentUser.userName = res.currentUser.userName;
+        _loggedInUser.roles = res.roles; */
+        _loggedInUser = res;
 
         this.loggedInUser = _loggedInUser;
+        return _loggedInUser;
       })
       .catch(x => this.handleAuthError(x));
 
@@ -75,11 +87,8 @@ export class UserService {
       .set('Content-Type', 'application/json')
       .set('Authorization', 'Bearer ' + authToken);
     return this.http.get<User[]>(this._url + '/accounts/users', { headers: headerOptions })
-      .map(res => {
-        let _user = new User();
-        _user = res;
-        this.users.push(res);
-      })
+      .map(res => this.users = res
+      )
       .catch(x => this.handleAuthError(x));
 
   }
@@ -91,8 +100,10 @@ export class UserService {
       .set('Authorization', 'Bearer ' + authToken);
     return this.http.get<string[]>(this._url + '/accounts/roles', { headers: headerOptions })
       .map(res => {
-        this.roles.push(res);
-      })
+        this.roles = res;
+        return this.roles;
+      }
+      )
       .catch(x => this.handleAuthError(x));
 
   }

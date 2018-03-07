@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ProjectService } from '../../configuration/project/project.service';
 import { ErrorMsgService, ToastrType } from '../../../services';
+import { Project, Group, Status } from '../../../models';
+import { StatusService } from '../../configuration/status/status.service';
+import { GroupService } from '../../configuration/group/group.service';
 import { UtilityService } from '../../../services/utility.service';
-import { Project } from '../../../models';
 
 @Component({
   selector: 'app-project',
@@ -12,16 +14,38 @@ import { Project } from '../../../models';
 export class ProjectComponent implements OnInit {
 
   currentProject: Project;
+  groups: Group[];
+  status: Status[];
+
+
   isLoading = false;
   currentTab = 'Details';
 
   constructor(private projectService: ProjectService,
-    private errorMsgService: ErrorMsgService, private util: UtilityService) {
+    private errorMsg: ErrorMsgService, private groupService: GroupService,
+    private statusService: StatusService,
+    private util: UtilityService) {
 
    }
 
   ngOnInit() {
+    this.getGroupList();
+    this.getStatusList();
+
       this.getProject(2);
+  }
+
+  getStatusList() {
+    this.statusService.getOptionList().subscribe(
+      results => this.status = results,
+      error => this.errorMsg.changeMessage(error));
+  }
+
+  getGroupList() {
+    this.groupService.getOptionList().subscribe(
+      results => this.groups = results,
+      error => this.errorMsg.changeMessage(error));
+
   }
 
   getProject(id: number) {
@@ -36,7 +60,7 @@ export class ProjectComponent implements OnInit {
           resource.roleName = this.util.findRoleName(resource.roleId);
           resource.resourceTypeName = this.util.findTypeName(resource.resourceTypeId);
         }
-        for (const fixedCost of this.currentProject.fixedPriceCosts){
+        for (const fixedCost of this.currentProject.fixedPriceCosts) {
           fixedCost.fixedPriceTypeName = this.util.findFixedPriceTypeName(fixedCost.fixedPriceTypeId);
           fixedCost.resourceTypeName = this.util.findTypeName(fixedCost.resourceTypeId);
         }
@@ -50,12 +74,12 @@ export class ProjectComponent implements OnInit {
         this.isLoading = false;
       },
       error => {
-        this.errorMsgService.showUserMessage(ToastrType.warning, 'Oops - Something Happened', error);
+        this.errorMsg.showUserMessage(ToastrType.warning, 'Oops - Something Happened', error);
       }
     );
 
   }
-  
+
   setCurrentTab(tab: string) {
     this.currentTab = tab;
   }

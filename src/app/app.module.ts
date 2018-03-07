@@ -7,7 +7,7 @@ import { AppBootstrapModule} from './appbootstrapmodule';
 import { AppComponent, HomeComponent, HeaderComponent} from './components';
 import { ConfigService } from './services';
 
-import { AccountModule } from './components/account/account.module';
+import { LoginModule } from './components/login/login.module';
 import { DashboardModule } from './components/dashboard/dashboard.module';
 import { ConfigurationModule } from './components/configuration/configuration.module';
 
@@ -20,7 +20,7 @@ import { routing } from './app.routing';
     HeaderComponent,
   ],
   imports: [
-    AccountModule,
+    LoginModule,
     DashboardModule,
     ConfigurationModule,
     BrowserModule,

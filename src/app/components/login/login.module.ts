@@ -6,10 +6,10 @@ import { UserService } from '../../services';
 
 import { EmailValidator } from '../../directives/email.validator.directive';
 
-import { routing } from './account.routing';
-import { RegistrationFormComponent } from './registration-form/registration-form.component';
+import { routing } from './login.routing';
+
 import { LoginFormComponent } from './login-form/login-form.component';
-import { AccountListComponent } from './account-list.component';
+
 
 
 
@@ -17,7 +17,7 @@ import { AccountListComponent } from './account-list.component';
   imports: [
     CommonModule, FormsModule, ReactiveFormsModule, routing, SharedModule
   ],
-  declarations: [RegistrationFormComponent, EmailValidator, LoginFormComponent, AccountListComponent],
+  declarations: [EmailValidator, LoginFormComponent],
   providers:    [ UserService ]
 })
-export class AccountModule { }
+export class LoginModule { }

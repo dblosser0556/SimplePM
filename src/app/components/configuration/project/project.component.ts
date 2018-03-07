@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ProjectService } from './project.service';
-import { Project, ProjectList } from '../../../models';
+import { Project, ProjectList, Status, Group } from '../../../models';
 import { Observable } from 'rxjs/Observable';
 import { ErrorMsgService } from '../../../services';
+import { StatusService } from '../status/status.service';
+import { GroupService } from '../group/group.service';
 
 import '../../../rxjs-extensions';
 
@@ -13,19 +15,27 @@ import '../../../rxjs-extensions';
 })
 export class ProjectComponent implements OnInit {
 
+
   projects: ProjectList[];
-  // projectList: ProjectList[];
+  projectList: ProjectList[];
 
   selectedProject: Project;
+  groups: Group[] = [];
+  status: Status[] = [];
+
   error: any;
   isLoading = false;
 
   constructor(private projectService: ProjectService,
-     private errorMsg: ErrorMsgService) {
+     private errorMsg: ErrorMsgService,
+      private statusService: StatusService,
+      private groupService: GroupService) {
   }
 
   ngOnInit() {
     this.getList();
+    this.getGroupList();
+    this.getStatusList();
   }
 
 
@@ -54,6 +64,22 @@ export class ProjectComponent implements OnInit {
     this.selectedProject = undefined;
   }
 
+  getStatusList() {
+    this.statusService.getOptionList().subscribe(
+      results =>
+      { this.status = results;
+        console.log('status', results);
+      console.log(this.status); },
+      error => this.errorMsg.changeMessage(error));
+  }
+
+  getGroupList() {
+    this.groupService.getOptionList().subscribe(
+      results => {this.groups = results;
+      console.log(this.groups); },
+      error => this.errorMsg.changeMessage(error));
+
+  }
   add() {
     this.selectedProject = new Project();
   }
