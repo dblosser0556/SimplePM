@@ -6,6 +6,7 @@ import { ProjectComponent } from './project/project.component';
 import { RootComponent } from './root/root.component';
 import { ProjectMonthlyDetailComponent } from './project/project-monthly-detail/project-monthly-detail.component';
 import { CommandMenuComponent } from './project/project-monthly-detail/command-menu-component';
+import { ProjectCardComponent } from './projects/project-card/project-card.component';
 
 export {
     HomeComponent,
@@ -15,7 +16,8 @@ export {
     ProjectComponent,
     RootComponent,
     ProjectMonthlyDetailComponent,
-    CommandMenuComponent
+    CommandMenuComponent,
+    ProjectCardComponent
 };
 
 export default [
@@ -26,5 +28,6 @@ export default [
     ProjectComponent,
     RootComponent,
     ProjectMonthlyDetailComponent,
-    CommandMenuComponent
+    CommandMenuComponent,
+    ProjectCardComponent
 ];

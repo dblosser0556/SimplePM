@@ -48,7 +48,7 @@
   </div>
   <div class="card" *ngIf="selectedProject">
     <div class="card-body">
-      <app-project-detail [project]="selectedProject" [groupList]="groups" [statusList]="status" (projectChange)="updateList($event)"></app-project-detail>
+      <app-project-detail [project]="selectedProject" [groupList]="groups" [statusList]="status" [pmList]="projectManagers" (projectChange)="updateList($event)"></app-project-detail>
     </div>
   </div>
 </div>

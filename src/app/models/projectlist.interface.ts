@@ -3,11 +3,18 @@ export interface ProjectList {
     projectName: string;
     projectDesc?: string;
     projectManager?: string;
+    projectManagerName?: string;
     plannedStartDate: string;
     actualStartDate?: string;
-    projectGroupId: number;
-    projectStatusId: number;
-    projectGroupName: string;
-    projectGroupManager?: string;
-    projectStatusName: string;
+    groupId: number;
+    statusId: number;
+    groupName: string;
+    groupManager?: string;
+    statusName: string;
+    totalPlannedExpense: number;
+    totalActualExpense: number;
+    totalPlannedCapital: number;
+    totalActualCapital: number;
+    totalExpenseBudget: number;
+    totalCapitalBudget: number;
 }

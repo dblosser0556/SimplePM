@@ -18,11 +18,18 @@ export class MultiselectDirective {
 
   @HostListener('mousedown', ['$event.target', '$event.which']) onMouseDown(el, button) {
 
+    const el1 = this.findTD(el);
+
+    // make sure this is an area of the table we want to select
+    if (!el1.classList.contains('ui-state-default')) {
+      return;
+    }
+
     this.dragging = true;
     if (!this.cntrlPressed) {
       this.clearCells();
     }
-    const el1 = this.findTD(el);
+
 
     this.setStartCell(el1);
     this.setRangeArea(this.startCell, el1);
@@ -30,7 +37,10 @@ export class MultiselectDirective {
    }
 
   @HostListener('mouseup', ['$event.target']) onMouseUp(el) {
-  
+
+    if (this.startCell === null) {
+      return;
+    }
     this.dragging = false;
     this.finalCell = this.findTD(el);
     this.setSelectedCells(this.startCell, this.finalCell);
@@ -78,6 +88,10 @@ export class MultiselectDirective {
     if (event.key === 'Control') {
       this.cntrlPressed = false;
     }
+
+    if (event.key === 'Escape') {
+      this.clearCells();
+    }
   }
 
   setStartCell(el) {
@@ -89,7 +103,7 @@ export class MultiselectDirective {
       if (el.classList.contains('ui-state-default')) {
         this.cellsBetween(this.startCell, el).forEach(element => {
           element.classList.add('hover-area');
-         
+
         });
       } else if (el.classList.contains('hover-ara')) {
         this.cellsBetween(this.startCell, el).forEach(elem => {

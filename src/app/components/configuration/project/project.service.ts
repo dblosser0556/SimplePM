@@ -3,7 +3,7 @@ import { AbstractRestService } from '../../../services/abstractrestservice';
 import { ConfigService } from '../../../services';
 import { Project, ProjectList } from '../../../models';
 import { UserService } from '../../../services';
-import { Http, Response, Headers, RequestOptions, RequestMethod } from '@angular/http';
+import { Http, Response, Headers, RequestOptions, RequestMethod, URLSearchParams } from '@angular/http';
 import { catchError } from 'rxjs/operators';
 import { Observable } from 'rxjs/Observable';
 
@@ -12,16 +12,26 @@ import { Observable } from 'rxjs/Observable';
 export class ProjectService extends
     AbstractRestService<Project> {
 
-    constructor( http: Http, user: UserService, private config: ConfigService ) {
+    constructor(http: Http, user: UserService, private config: ConfigService) {
         super(http, 'http://localhost:5000/api/' + 'projects', user);
     }
 
-    getList(): Observable<ProjectList[]> {
+    getList(params?: any): Observable<ProjectList[]> {
         const headerOptions = this.getHeader();
         const requestOptions = new RequestOptions({
             method: RequestMethod.Get,
             headers: headerOptions
         });
+
+        if (params !== undefined) {
+            requestOptions.params = new URLSearchParams();
+            const keys = Object.keys(params);
+            for (const key of keys) {
+                requestOptions.params.append(key, params[key]);
+            }
+           
+        }
+
         return this._http.get(this.actionUrl, requestOptions)
             .map((res: Response) => res.json())
             .pipe(catchError(this.handleError)

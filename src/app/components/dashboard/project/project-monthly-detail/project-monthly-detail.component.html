@@ -15,7 +15,7 @@
           </div>
         </div>
       </ul>
-      <button class="btn btn-outline-success my-2 my-sm-0" type="submit" (click)="saveProject()">Save</button>
+      <button class="btn btn-outline-success my-2 my-sm-0" type="submit" [disabled]="editingIndex !== -1" (click)="saveProject()">Save</button>
     </div>
   </nav>
 </div>
@@ -38,7 +38,7 @@
               <i class="fas fa-plus-square"></i>
             </a>
           </th>
-          <th class="month-col" *ngFor="let month of project.months.slice([fcol],[lcol])">{{project.startDate().setMonth(project.startDate().getMonth() + month.monthNo) |date:'MMM-yy' }}</th>
+          <th class="month-col" *ngFor="let month of project.months.slice([fcol],[lcol])">{{project.startDate().setMonth(project.startDate().getMonth() + month.monthNo - 1) |date:'MMM-yy' }}</th>
 
         </tr>
         <tr>
@@ -113,7 +113,7 @@
 
         <th *ngIf="selectedView=='Forecast'" class="month-col">{{resource.totalPlannedEffort}}</th>
         <th *ngIf="selectedView=='Actuals'" class="month-col">{{resource.totalActualEffort}}</th>
-        <td class="ui-state-default month-col" id="res-{{resource.resourceId}}-{{month.resourceMonthId}}" *ngFor="let month of resource.resourceMonths.slice([fcol],[lcol])">
+        <td class="ui-state-default month-col" id="res+{{resource.resourceId}}+{{month.resourceMonthId}}" *ngFor="let month of resource.resourceMonths.slice([fcol],[lcol])">
           <ng-container *ngIf="selectedView=='Forecast'">
             <div (click)="editResource(resource)" title="Click to edit" class="resource-month" [ngClass]="{
               'fontcolor1':month.plannedEffortStyle === 0 && selectedView == 'Forecast',
@@ -214,7 +214,7 @@
 
         <th *ngIf="selectedView=='Forecast'" class="total-col">{{fixedPrice.totalPlannedCost}}</th>
         <th *ngIf="selectedView=='Actuals'" class="total-col">{{fixedPrice.totalActualCost}}</th>
-        <td class="ui-state-default month-col month-col" id="fix-{{fixedPrice.fixedPriceId}}-{{month.fixedPriceMonthId}}" *ngFor="let month of fixedPrice.fixedPriceMonths.slice([fcol],[lcol])">
+        <td class="ui-state-default month-col month-col" id="fix+{{fixedPrice.fixedPriceId}}+{{month.fixedPriceMonthId}}" *ngFor="let month of fixedPrice.fixedPriceMonths.slice([fcol],[lcol])">
           <ng-container *ngIf="selectedView=='Forecast'">
             <div (click)="editFixedPrice(fixedPrice, f)" class="fixedPrice-month" [ngClass]="{
               'fontcolor1':month.plannedCostStyle === 0 && selectedView == 'Forecast',
@@ -242,7 +242,7 @@
               'error':month.actualCostInError && selectedView == 'Actuals'
     
             }">
-              <div *ngIf="!fixedPrice.editMode">S-{{month.actualCostStyle}}-{{selectedView}}-{{month.actualCost | currency:'USD':'symbol-narrow':'0.0-0'}}</div>
+              <div *ngIf="!fixedPrice.editMode">{{month.actualCost | currency:'USD':'symbol-narrow':'0.0-0'}}</div>
               <input (blur)="updateFixedPrice($event, 'actualcost', fixedPrice, month, f)" *ngIf="fixedPrice.editMode" name="fixedPriceMonth"
                 class="form-control" type="text" [value]="month.actualCost">
             </div>

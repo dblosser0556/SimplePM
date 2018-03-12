@@ -1,7 +1,7 @@
 
 import { Component, OnInit, Input, OnChanges, Output, EventEmitter  } from '@angular/core';
 import { ProjectService } from '../configuration/project/project.service';
-import { Project, Status, Group, Role } from './../../models';
+import { Project, Status, Group, Role, LoggedInUser } from './../../models';
 import { FormBuilder, FormGroup, Validators, FormControl, AbstractControl } from '@angular/forms';
 import { ErrorMsgService } from './../../services';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
@@ -26,6 +26,8 @@ export class ProjectDetailComponent implements OnInit, OnChanges {
   @Input() project: Project;
   @Input() statusList: Status[];
   @Input()  groupList: Group[];
+  @Input() pmList: LoggedInUser[];
+
   @Output() projectChange = new EventEmitter<Project>();
 
 
@@ -45,12 +47,11 @@ export class ProjectDetailComponent implements OnInit, OnChanges {
 
   ngOnInit() {
     this.bsConfig = Object.assign({}, { containerClass: this.colorTheme,
-                                        dateInputFormat: 'YYYY-MM-DD'});
+                                        dateInputFormat: 'YYYY-MM-DD',
+                                        dateOutputFormat: 'YYYY-MM-DD'});
   }
 
   ngOnChanges() {
-
-
     this.projectForm.reset( {
       projectID: this.project.projectId,
       projectName: this.project.projectName,
@@ -97,18 +98,21 @@ export class ProjectDetailComponent implements OnInit, OnChanges {
 
 
   getProjectFromFormValue(formValue: any): Project {
-    const project = new Project();
+    this.project.projectId = formValue.projectID;
+    this.project.projectName = formValue.projectName;
+    this.project.projectDesc = formValue.projectDesc;
+    this.project.projectManager = formValue.projectManager;
 
-
-    project.projectId = formValue.projectID;
-    project.projectName = formValue.projectName;
-    project.projectDesc = formValue.projectDesc;
-    project.projectManager = formValue.projectManager;
-    project.plannedStartDate = formValue.plannedStartDate;
-    project.actualStartDate = formValue.actualStartDate;
-    project.groupId = formValue.groupId;
-    project.statusId = formValue.statusId;
-    return project;
+    // the date picker return an instance of date so convert it back to string.
+    this.project.plannedStartDate = (formValue.plannedStartDate instanceof Date) ?
+      formValue.plannedStartDate.toString('YYYY-MM-DD') : formValue.plannedStartDate;
+    this.project.actualStartDate = (formValue.actualStartDate instanceof Date) ?
+      formValue.actualStartDate.toString('YYYY-MM-DD') : formValue.actualStartDate;
+    
+    
+      this.project.groupId = formValue.groupId;
+    this.project.statusId = formValue.statusId;
+    return this.project;
 
   }
 

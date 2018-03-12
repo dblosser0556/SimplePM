@@ -13,6 +13,13 @@ import { ConfigService } from '../../../../services/config.service';
 
 
 
+export enum EditingType {
+  none,
+  month,
+  resource,
+  fixedPrice
+}
+
 @Component({
   selector: 'app-project-monthly-detail',
   templateUrl: './project-monthly-detail.component.html',
@@ -42,11 +49,32 @@ export class ProjectMonthlyDetailComponent implements OnInit {
 
   showPaginator = true;
 
-  editingRow = -1;
+  editingIndex = -1;
+  editingType: EditingType = EditingType.none;
 
   @HostListener('window:resize', ['$event'])
   onResize(event) {
     this.calcPageSize(event.target.innerWidth);
+  }
+
+  @HostListener('document:keyup', ['$event']) handleKeyUpEvent(event: KeyboardEvent) {
+
+    if (event.key === 'Escape') {
+      switch (this.editingType) {
+        case EditingType.none:
+          return;
+        case EditingType.month:
+          this.cancelPhase(this.project.months[this.editingIndex], this.editingIndex);
+          return;
+        case EditingType.fixedPrice:
+          this.cancelFixedPriceEdit(this.project.fixedPriceCosts[this.editingIndex], this.editingIndex);
+          return;
+        case EditingType.resource:
+          this.cancelResourceEdit(this.project.resources[this.editingIndex], this.editingIndex);
+          return;
+
+      }
+    }
   }
 
   constructor(
@@ -110,7 +138,7 @@ export class ProjectMonthlyDetailComponent implements OnInit {
     projectMonth.totalPlannedExpense = 0;
 
 
-    const monthNo = this.project.months.push(projectMonth);
+    const monthNo = this.project.months.push(projectMonth) - 1;
     projectMonth.monthNo = monthNo;
 
     if (this.project.resources !== null) {
@@ -151,6 +179,7 @@ export class ProjectMonthlyDetailComponent implements OnInit {
     resource.vendor = '';
     resource.totalActualEffort = 0;
     resource.totalPlannedEffort = 0;
+    
 
 
     this.project.resources.push(resource);
@@ -178,10 +207,13 @@ export class ProjectMonthlyDetailComponent implements OnInit {
     resourceMonth.monthNo = monthNo;
     resourceMonth.actualEffort = 0;
     resourceMonth.actualEffortCapPercent = 1;
+    resourceMonth.actualEffortStyle = 1;
+    resourceMonth.actualEffortInError = false;
     resourceMonth.plannedEffort = 0;
     resourceMonth.plannedEffortCapPercent = 1;
-
-
+    resourceMonth.plannedEffortStyle = 1;
+    resourceMonth.plannedEffortInError = false;
+  
     resource.resourceMonths.push(resourceMonth);
 
   }
@@ -226,8 +258,12 @@ export class ProjectMonthlyDetailComponent implements OnInit {
     fixedPriceMonth.monthNo = monthNo;
     fixedPriceMonth.actualCost = 0;
     fixedPriceMonth.actualCostCapPercent = 1;
+    fixedPriceMonth.actualCostStyle = 1;
+    fixedPriceMonth.actualCostInError = false;
     fixedPriceMonth.plannedCost = 0;
     fixedPriceMonth.plannedCostCapPercent = 1;
+    fixedPriceMonth.plannedCostStyle = 1;
+    fixedPriceMonth.plannedCostCapInError = false;
 
 
     projectFixedPrice.fixedPriceMonths.push(fixedPriceMonth);
@@ -235,22 +271,37 @@ export class ProjectMonthlyDetailComponent implements OnInit {
   }
 
   editPhase(month, index) {
-    month.editMode = true;
+    if (this.editingIndex === -1) {
+      month.editMode = true;
+      this.editingIndex = index;
+      this.editingType = EditingType.month;
+    } else if (this.editingIndex !== index  && this.editingType !== EditingType.month) {
+      this.errors.showUserMessage(ToastrType.info, 'Sorry', 'Only one item at a time', false, 2000);
+    }
   }
 
   updatePhase(event, month) {
     month.phaseId = Number(event.target.value);
     month.phaseName = this.util.findPhaseName(month.phaseId);
     month.editMode = false;
+    this.editingType = EditingType.none;
+    this.editingIndex = -1;
+  }
+
+  cancelPhase(month, index) {
+    month.editMode = false;
+    this.editingType = EditingType.none;
+    this.editingIndex = -1;
   }
 
   // Manage in-line editing for the Project Resource
   editResource(resource, index) {
-    if (this.editingRow === -1) {
+    if (this.editingIndex === -1) {
       resource.editMode = true;
-      this.editingRow = index;
+      this.editingIndex = index;
+      this.editingType = EditingType.resource;
       this.savedResource = new Resource(resource);
-    } else if (this.editingRow !== index) {
+    } else if (this.editingIndex !== index  && this.editingType !== EditingType.resource) {
       this.errors.showUserMessage(ToastrType.info, 'Sorry', 'Only one row at a time', false, 2000);
     }
 
@@ -284,7 +335,8 @@ export class ProjectMonthlyDetailComponent implements OnInit {
     }
 
     resource.editMode = false;
-    this.editingRow = -1;
+    this.editingIndex = -1;
+    this.editingType = EditingType.none;
   }
 
   deleteResource(resource, index) {
@@ -293,7 +345,8 @@ export class ProjectMonthlyDetailComponent implements OnInit {
 
   saveResourceEdit(resource, index) {
     resource.editMode = false;
-    this.editingRow = -1;
+    this.editingIndex = -1;
+    this.editingType = EditingType.none;
   }
 
   updateResource(event, cell, resource, month?, mIndex?) {
@@ -339,11 +392,12 @@ export class ProjectMonthlyDetailComponent implements OnInit {
 
 
   editFixedPrice(fixedPrice, index) {
-    if (this.editingRow === -1) {
+    if (this.editingIndex === -1) {
       fixedPrice.editMode = true;
-      this.editingRow = index;
+      this.editingIndex = index;
+      this.editingType = EditingType.fixedPrice;
       this.savedFixedPrice = new FixedPrice(fixedPrice);
-    } else if (this.editingRow !== index) {
+    } else if (this.editingIndex !== index  && this.editingType !== EditingType.fixedPrice) {
       this.errors.showUserMessage(ToastrType.info, 'Sorry', 'Only one row at a time', false, 2000);
     }
 
@@ -376,7 +430,8 @@ export class ProjectMonthlyDetailComponent implements OnInit {
     }
 
     fixedPrice.editMode = false;
-    this.editingRow = -1;
+    this.editingIndex = -1;
+    this.editingType = EditingType.none;
   }
 
   deleteFixedPrice(fixedPrice, index) {
@@ -385,7 +440,8 @@ export class ProjectMonthlyDetailComponent implements OnInit {
 
   saveFixedPriceEdit(fixedPrice, index) {
     fixedPrice.editMode = false;
-    this.editingRow = -1;
+    this.editingIndex = -1;
+    this.editingType = EditingType.none;
   }
 
   updateFixedPrice(event, cell, fixedPrice, month?, mIndex?) {

@@ -12,7 +12,8 @@ export class UserService {
   loggedIn = false;
   loggedInUser: LoggedInUser;
   authorityToken: string;
-  users: User[] = [];
+  users: LoggedInUser[] = [];
+  usersInRole: LoggedInUser[] = [];
   roles: any;
 
 
@@ -47,8 +48,10 @@ export class UserService {
       .set('Content-Type', 'application/json');
     return this.http.post(this._url + '/auth/login', body, { headers: headerOptions, responseType: 'text' })
       .map(res => {
-        const tok = JSON.parse(res);
+        const tok = JSON.parse(JSON.parse(res));
         this.authorityToken = tok.auth_token;
+        console.log('token', this.authorityToken);
+
         this.loggedIn = true;
         this._authNavStatusSource.next(true);
         return true;
@@ -86,7 +89,7 @@ export class UserService {
     const headerOptions = new HttpHeaders()
       .set('Content-Type', 'application/json')
       .set('Authorization', 'Bearer ' + authToken);
-    return this.http.get<User[]>(this._url + '/accounts/users', { headers: headerOptions })
+    return this.http.get<LoggedInUser[]>(this._url + '/accounts/users', { headers: headerOptions })
       .map(res => this.users = res
       )
       .catch(x => this.handleAuthError(x));
@@ -102,10 +105,26 @@ export class UserService {
       .map(res => {
         this.roles = res;
         return this.roles;
-      }
-      )
+      })
       .catch(x => this.handleAuthError(x));
 
+  }
+
+  getUserInRoles(roleName: string) {
+    console.log('token', this.authorityToken);
+    const authToken = this.authorityToken;
+    const headerOptions = new HttpHeaders()
+      .set('Content-Type', 'application/json')
+      .set('Authorization', 'Bearer ' + authToken);
+    return this.http.get<LoggedInUser[]>(this._url + '/accounts/role/' + roleName, { headers: headerOptions })
+      .map(res => 
+        {this.usersInRole = res;
+          
+        console.log('PM in service:', this.usersInRole);
+        console.log('PM ret in svc: ', res); 
+        return res;}
+      )
+      .catch(x => this.handleAuthError(x));
   }
 
   logOut() {

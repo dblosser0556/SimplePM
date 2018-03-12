@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ProjectService } from './project.service';
-import { Project, ProjectList, Status, Group } from '../../../models';
+import { Project, ProjectList, Status, Group, LoggedInUser } from '../../../models';
 import { Observable } from 'rxjs/Observable';
 import { ErrorMsgService } from '../../../services';
 import { StatusService } from '../status/status.service';
 import { GroupService } from '../group/group.service';
+import { UserService } from '../../../services/user.service';
 
 import '../../../rxjs-extensions';
 
@@ -22,20 +23,23 @@ export class ProjectComponent implements OnInit {
   selectedProject: Project;
   groups: Group[] = [];
   status: Status[] = [];
+  projectManagers: LoggedInUser[] = [];
 
   error: any;
   isLoading = false;
 
   constructor(private projectService: ProjectService,
-     private errorMsg: ErrorMsgService,
+      private errorMsg: ErrorMsgService,
       private statusService: StatusService,
-      private groupService: GroupService) {
+      private groupService: GroupService,
+      private userService: UserService) {
   }
 
   ngOnInit() {
     this.getList();
     this.getGroupList();
     this.getStatusList();
+    this.getPMList();
   }
 
 
@@ -66,20 +70,24 @@ export class ProjectComponent implements OnInit {
 
   getStatusList() {
     this.statusService.getOptionList().subscribe(
-      results =>
-      { this.status = results;
-        console.log('status', results);
-      console.log(this.status); },
+      results => this.status = results,
       error => this.errorMsg.changeMessage(error));
   }
 
   getGroupList() {
     this.groupService.getOptionList().subscribe(
-      results => {this.groups = results;
-      console.log(this.groups); },
+      results => this.groups = results,
       error => this.errorMsg.changeMessage(error));
-
   }
+
+  getPMList() {
+    this.userService.getUserInRoles('editProjects').subscribe(
+      results => { this.projectManagers = results;
+      console.log('ProjectM', this.projectManagers);
+      console.log('PM ret: ', results) },
+      error => this.errorMsg.changeMessage(error));
+  }
+
   add() {
     this.selectedProject = new Project();
   }

@@ -22,7 +22,10 @@ import {HomeComponent,
   ProjectComponent,
   RootComponent,
   ProjectMonthlyDetailComponent,
-  CommandMenuComponent } from '../dashboard';
+  CommandMenuComponent,
+  ProjectCardComponent
+ } from '../dashboard';
+
 
 
 
@@ -49,7 +52,8 @@ import {HomeComponent,
     ProjectComponent,
     RootComponent,
     ProjectMonthlyDetailComponent,
-    CommandMenuComponent],
+    CommandMenuComponent,
+    ProjectCardComponent],
   providers: [AuthGuard, ProjectService ]
 })
 export class DashboardModule { }

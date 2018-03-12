@@ -14,7 +14,7 @@ import { LoggedInUser, User, UserRole } from '../../../models';
 
 export class AccountListComponent implements OnInit {
 
-    users: User[];
+    users: LoggedInUser[];
     selectedUser: LoggedInUser;
     roleList: string[];
     error: any;
@@ -71,15 +71,11 @@ export class AccountListComponent implements OnInit {
         this.selectedUser = user;
     }
 
-    edit(user: User) {
-        this.userService.getLoggedInUser(user.userName)
-            .subscribe(results => {
-                let _user = new LoggedInUser;
-                _user = results;
-                this.selectedUser = _user;
+    edit(user: LoggedInUser) {
+       
+     this.selectedUser = user;
 
-            },
-        error => this.errMsg.showUserMessage(ToastrType.warning, 'Oops-something went wrong', error));
+       
     }
 
     updateList(event: any) {

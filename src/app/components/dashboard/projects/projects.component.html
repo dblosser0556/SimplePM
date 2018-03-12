@@ -1,7 +1,7 @@
-<div>
-  <tabset>
-    <tab heading="Details" id="tab1">Static content</tab>
-    <tab heading="Forecast">Static content 1</tab>
-    <tab heading="Actuals">Static content 2</tab> 
-  </tabset>
+<div class="container-fluid">
+  <div class="card-deck">
+    <div *ngFor="let curProject of projectList">
+      <app-project-card [project]="curProject"></app-project-card>
+    </div>
+  </div>
 </div>

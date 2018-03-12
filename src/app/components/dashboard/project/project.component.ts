@@ -1,10 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { ProjectService } from '../../configuration/project/project.service';
 import { ErrorMsgService, ToastrType } from '../../../services';
-import { Project, Group, Status } from '../../../models';
+import { Project, Group, Status, LoggedInUser } from '../../../models';
 import { StatusService } from '../../configuration/status/status.service';
 import { GroupService } from '../../configuration/group/group.service';
 import { UtilityService } from '../../../services/utility.service';
+import { UserService } from '../../../services/user.service';
+import { ActivatedRoute } from '@angular/router';
+import 'rxjs/add/operator/filter';
 
 @Component({
   selector: 'app-project',
@@ -16,7 +19,7 @@ export class ProjectComponent implements OnInit {
   currentProject: Project;
   groups: Group[];
   status: Status[];
-
+  projectManagers: LoggedInUser[];
 
   isLoading = false;
   currentTab = 'Details';
@@ -24,15 +27,17 @@ export class ProjectComponent implements OnInit {
   constructor(private projectService: ProjectService,
     private errorMsg: ErrorMsgService, private groupService: GroupService,
     private statusService: StatusService,
-    private util: UtilityService) {
+    private util: UtilityService,
+    private userService: UserService,
+    private route: ActivatedRoute ) {
 
    }
 
   ngOnInit() {
+    this.getPMList();
     this.getGroupList();
     this.getStatusList();
-
-      this.getProject(2);
+    this.getProject();
   }
 
   getStatusList() {
@@ -48,8 +53,19 @@ export class ProjectComponent implements OnInit {
 
   }
 
-  getProject(id: number) {
+  getPMList() {
+    this.userService.getUserInRoles('editProjects').subscribe(
+      results => this.projectManagers = results,
+      error => this.errorMsg.changeMessage(error));
+  }
+
+  getProject() {
     this.isLoading = true;
+    this.route.queryParams
+      .filter(params => params.projectId)
+      .subscribe(params => {
+        const id = params.projectId;
+
     this.projectService.getOne(id).subscribe(
       results => {
         this.currentProject = new Project();
@@ -77,7 +93,7 @@ export class ProjectComponent implements OnInit {
         this.errorMsg.showUserMessage(ToastrType.warning, 'Oops - Something Happened', error);
       }
     );
-
+  });
   }
 
   setCurrentTab(tab: string) {

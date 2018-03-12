@@ -36,7 +36,12 @@ export class Project {
         }
     }
 
-    private getDate(_date: string) {
+    private getDate(pdate: any) {
+        console.log(pdate);
+        if (pdate instanceof Date) {
+            return pdate;
+        }
+        const _date: string = pdate;
         const _dates = _date.split('-');
         const _year = Number(_dates[0]);
         let _month = 1;
@@ -76,6 +81,9 @@ export class Project {
                 break;
             case 'Dec':
                 _month = 12;
+                break;
+            default:
+                _month = Number(_dates[1]);
         }
         return new Date(_year, _month, 1);
 

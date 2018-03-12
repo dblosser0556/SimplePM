@@ -39,14 +39,14 @@ export class CommandMenuComponent implements OnInit {
         for (const el of this.selectedCells) {
             el.classList.remove('eng-selected-item');
             el.classList.remove('hover-area');
-            const cells = el.attributes['id'].nodeValue.split('-');
+            const cells = el.attributes['id'].nodeValue.split('+');
             if (cells[0] === 'res') {
-                // go through the set of resoruce and months and update to percent 
+                // go through the set of resoruce and months and update to percent
                 this.project.resources.forEach(res => {
                     res.resourceMonths.forEach(mon => {
                         if (res.resourceId === Number(cells[1]) && mon.resourceMonthId === Number(cells[2])) {
                             if (this.selectedView === 'Forecast') {
-                                // this passes the values is as an array of 
+                                // this passes the values is as an array of
                                 // length 1.  So use the first value.
                                 mon.plannedEffortCapPercent = percent[0];
                                 mon.plannedEffortStyle = style[0];
