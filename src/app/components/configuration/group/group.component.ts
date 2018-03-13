@@ -14,6 +14,7 @@ export class GroupComponent implements OnInit {
   items: Group[];
   selectedItem: Group;
   managers: LoggedInUser[];
+  groupOptionsList: Group[];
 
   error: any;
   isLoading = false;
@@ -25,6 +26,7 @@ export class GroupComponent implements OnInit {
 
   ngOnInit() {
     this.getPMList();
+    this.getGroupList();
     this.getList();
 
   }
@@ -34,6 +36,9 @@ export class GroupComponent implements OnInit {
 
   onDelete(id: number) {
     if (confirm('Are you sure to delete this record?') === true) {
+      // don't delete if there is a child or project assigned.
+      ////////
+
       this.itemService.delete(id)
         .subscribe(x => {
            // this.snackBar.open('Phase has been deleted', '', { duration: 2000 });
@@ -54,6 +59,11 @@ export class GroupComponent implements OnInit {
     this.selectedItem = undefined;
   }
 
+  getGroupList() {
+    this.itemService.getOptionList().subscribe(
+      results => this.groupOptionsList = results,
+      error => this.errorMsg.changeMessage(error));
+  }
   getPMList() {
     this.userService.getUserInRoles('editPrograms').subscribe(
       results => {

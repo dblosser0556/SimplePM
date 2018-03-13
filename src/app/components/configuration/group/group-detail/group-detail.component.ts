@@ -9,6 +9,9 @@ interface CreateGroup {
   groupName: string;
   groupDesc: string;
   groupManager: string;
+  parentId: number;
+  level: number;
+  levelDesc: string;
 }
 
 
@@ -23,6 +26,7 @@ export class GroupDetailComponent implements OnInit, OnChanges {
  
   @Input() item: Group;
   @Input() pmList: LoggedInUser[];
+  @Input() groupOptions: Group[];
   @Output() itemChange = new EventEmitter<Group>();
 
   itemForm: FormGroup;
@@ -37,11 +41,17 @@ export class GroupDetailComponent implements OnInit, OnChanges {
   ngOnInit() {}
 
   ngOnChanges() {
+    if (this.item.level === undefined) {
+      this.item.level = 0;
+    }
     this.itemForm.reset( {
       itemId: this.item.groupId,
       itemName: this.item.groupName,
       itemDesc: this.item.groupDesc,
-      itemManager: this.item.groupManager} );
+      itemManager: this.item.groupManager,
+      groupId: this.item.groupId,
+      levelDesc: this.item.levelDesc,
+      level: this.item.level} );
   }
 
   onSubmit() {
@@ -61,7 +71,10 @@ export class GroupDetailComponent implements OnInit, OnChanges {
       const newGroup: CreateGroup = {
             groupName: item.groupName,
             groupDesc: item.groupDesc,
-            groupManager: item.groupManager};
+            groupManager: item.groupManager,
+            level: item.level,
+            parentId: item.parentId,
+            levelDesc: item.levelDesc};
 
       this.itemService.create(JSON.stringify(newGroup)).subscribe(data => {
         // this.resetForm();
@@ -81,6 +94,9 @@ export class GroupDetailComponent implements OnInit, OnChanges {
     item.groupId = formValue.itemId;
     item.groupName = formValue.itemName;
     item.groupDesc = formValue.itemDesc;
+    item.groupId = formValue.groupId;
+    item.levelDesc = formValue.levelDesc;
+    item.level = formValue.level;
     return item;
 
   }
@@ -88,6 +104,9 @@ export class GroupDetailComponent implements OnInit, OnChanges {
   createForm() {
     this.itemForm = this.fb.group({
       itemId: '',
+      parentId: '',
+      level: '',
+      levelDesc: '',
       itemName: ['', Validators.required],
       itemDesc: '',
       itemManager: ''
@@ -100,5 +119,12 @@ export class GroupDetailComponent implements OnInit, OnChanges {
 
   cancel() { this.itemChange.emit(this.item); }
 
+  updateLevel(groupId: number) {
+    this.groupOptions.forEach(g => {
+      if (g.groupId = groupId) {
+        this.itemForm.patchValue({'level': g.level + 1 } );
+      }
+    });
+  }
 
 }

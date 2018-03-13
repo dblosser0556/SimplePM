@@ -29,6 +29,9 @@ export class GroupService extends
                 type.groupId = -1;
                 type.groupName = '-Select-';
                 results.push(type);
+                type.groupId = 0;
+                type.groupName = 'No Parent';
+                results.push(type);
                 results.sort((leftSide, rightSide): number => {
                 if (leftSide.groupId < rightSide.groupId) { return -1; }
                 if (leftSide.groupId > rightSide.groupId) { return 1; }

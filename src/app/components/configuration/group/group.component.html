@@ -41,7 +41,7 @@
   </div>
   <div class="card" *ngIf="selectedItem">
     <div class="card-body">
-      <app-group-detail [item]="selectedItem" [pmList]="managers" (itemChange)="updateList($event)" ></app-group-detail>
+      <app-group-detail [item]="selectedItem" [pmList]="managers" [groupOptions]="groupOptionsList" (itemChange)="updateList($event)" ></app-group-detail>
     </div>
   </div>
 </div>

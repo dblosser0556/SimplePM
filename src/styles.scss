@@ -71,6 +71,11 @@ main {
   background: rgb(237, 238, 241);
 }
 
+.card {
+  box-shadow: 10px 10px 5px grey;
+  margin: 5px;
+}
+
 #sidebar {
   min-width: 200px;
   max-width: 200px;
