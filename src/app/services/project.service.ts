@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { AbstractRestService } from '../../../services/abstractrestservice';
-import { ConfigService } from '../../../services';
-import { Project, ProjectList } from '../../../models';
-import { UserService } from '../../../services';
+import { AbstractRestService } from './abstractrestservice';
+import { ConfigService } from './config.service';
+import { Project, ProjectList } from '../models';
+import { UserService } from './user.service';
 import { Http, Response, Headers, RequestOptions, RequestMethod, URLSearchParams } from '@angular/http';
 import { catchError } from 'rxjs/operators';
 import { Observable } from 'rxjs/Observable';

@@ -1,0 +1,61 @@
+<div class="container" fxLayout="column" fxLayoutGap="20px">
+  <div class="card">
+    <div class="card-body">
+      <div *ngIf="isLoading">Loading Project List ...</div>
+      <table class="table table-sm table-hover" *ngIf="!isLoading">
+        <thead>
+          <tr>
+            <th>Project Name</th>
+            <th>Description</th>
+            <th>Group</th>
+            <th>Status</th>
+            <th>Edit</th>
+            <th>Delete</th>
+            <th>Details</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let project of projects">
+            <td>
+              {{project.projectName}}
+            </td>
+            <td>
+              {{project.projectDesc}}
+            </td>
+            <td>
+              {{project.groupName}}
+            </td>
+            <td>
+              {{project.statusName}}
+            </td>
+
+            <td>
+              <a (click)="edit(project)">
+                <i class="fas fa-edit"></i>
+              </a>
+            </td>
+            <td>
+              <a ref (click)="onDelete(project.projectId)">
+                <i class="fas fa-trash"></i>
+              </a>
+            </td>
+            <td>
+              <a ref (click)="showDetails(project.projectId)">
+                <i class="fas fa-puzzle-piece"></i>
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="card-body">
+        <button class="btn btn-primary" (click)="add()">
+          <i class="fas fa-plus-square"></i>Add New</button>
+      </div>
+    </div>
+  </div>
+  <div class="card" *ngIf="selectedProject">
+    <div class="card-body">
+      <app-project-detail [project]="selectedProject" [groupList]="groups" [createTemplate]="isTemplate" [statusList]="status" [pmList]="projectManagers" (projectChange)="updateList($event)"></app-project-detail>
+    </div>
+  </div>
+</div>

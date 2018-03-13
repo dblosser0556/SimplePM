@@ -5,7 +5,7 @@
   
  <tabset>
     <tab heading="Details" (select)="setCurrentTab('Details')" id="tab1">
-        <app-project-detail [(project)]="currentProject" [groupList]="groups" [statusList]="status" [pmList]="projectManagers"></app-project-detail>
+        <app-project-detail [(project)]="currentProject" [createTemplate]="isTemplate" [groupList]="groups" [statusList]="status" [pmList]="projectManagers"></app-project-detail>
     </tab>
     <tab heading="Forecast" (select)="setCurrentTab('Forecast')">
         <app-project-monthly-detail [(project)]="currentProject" [selectedView]="currentTab"></app-project-monthly-detail>

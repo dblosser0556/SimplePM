@@ -14,6 +14,12 @@
       <label class="center-block">Description:</label>
       <input class="form-control" formControlName="projectDesc">
     </div>
+
+    <div class="form-check" *ngIf="createTemplate">
+      <input type="checkbox" class="form-check-input" id="exampleCheck1" disabled="true" formControlName="isTemplate">
+      <label class="form-check-label" for="exampleCheck1">Is Template</label>
+    </div>
+
   </div>
   <div class="row">
     <div class="col-xs-12 col-12 col-sm-6 col-md-4 form-group">

@@ -9,7 +9,7 @@ export class Project {
     months: Month[] = [];
     resources: Resource[] = [];
     fixedPriceCosts: FixedPrice[] = [];
-
+    isTemplate: boolean = null;
     projectId: number = null;
     projectName: string = null;
     projectDesc: string = null;
@@ -37,7 +37,7 @@ export class Project {
     }
 
     private getDate(pdate: any) {
-        console.log(pdate);
+
         if (pdate instanceof Date) {
             return pdate;
         }

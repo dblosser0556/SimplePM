@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { RoleService } from './role.service';
 import { Role } from '../../../models';
-import { Observable } from 'rxjs/Observable';
 import { ErrorMsgService } from '../../../services';
 
 import '../../../rxjs-extensions';

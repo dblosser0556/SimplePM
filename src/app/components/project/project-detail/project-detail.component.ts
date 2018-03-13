@@ -1,12 +1,14 @@
 
 import { Component, OnInit, Input, OnChanges, Output, EventEmitter  } from '@angular/core';
-import { ProjectService } from '../configuration/project/project.service';
-import { Project, Status, Group, Role, LoggedInUser } from './../../models';
+import { ProjectService } from '../../../services';
+import { Project, Status, Group, Role, LoggedInUser } from '../../../models';
 import { FormBuilder, FormGroup, Validators, FormControl, AbstractControl } from '@angular/forms';
-import { ErrorMsgService } from './../../services';
+import { ErrorMsgService } from '../../../services';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
+import * as moment from 'moment';
 
 interface CreateProject {
+  isTemplate: boolean;
   projectName: string;
   projectDesc: string;
   projectManager: string;
@@ -27,6 +29,7 @@ export class ProjectDetailComponent implements OnInit, OnChanges {
   @Input() statusList: Status[];
   @Input()  groupList: Group[];
   @Input() pmList: LoggedInUser[];
+  @Input() createTemplate: boolean;
 
   @Output() projectChange = new EventEmitter<Project>();
 
@@ -54,6 +57,10 @@ export class ProjectDetailComponent implements OnInit, OnChanges {
   ngOnChanges() {
     this.projectForm.reset( {
       projectID: this.project.projectId,
+
+      // always set the value to the passed in value.
+      isTemplate: this.createTemplate,
+      
       projectName: this.project.projectName,
       projectDesc: this.project.projectDesc,
       projectManager: this.project.projectManager,
@@ -79,6 +86,7 @@ export class ProjectDetailComponent implements OnInit, OnChanges {
     } else {
       const newProject: CreateProject = {
             projectName: project.projectName,
+            isTemplate: project.isTemplate,
             projectDesc: project.projectDesc,
             projectManager: project.projectManager,
             plannedStartDate: project.plannedStartDate,
@@ -98,18 +106,29 @@ export class ProjectDetailComponent implements OnInit, OnChanges {
 
 
   getProjectFromFormValue(formValue: any): Project {
+
     this.project.projectId = formValue.projectID;
+    this.project.isTemplate = formValue.isTemplate;
     this.project.projectName = formValue.projectName;
     this.project.projectDesc = formValue.projectDesc;
     this.project.projectManager = formValue.projectManager;
 
     // the date picker return an instance of date so convert it back to string.
-    this.project.plannedStartDate = (formValue.plannedStartDate instanceof Date) ?
-      formValue.plannedStartDate.toString('YYYY-MM-DD') : formValue.plannedStartDate;
-    this.project.actualStartDate = (formValue.actualStartDate instanceof Date) ?
-      formValue.actualStartDate.toString('YYYY-MM-DD') : formValue.actualStartDate;
-    
-    
+    if (formValue.plannedStartDate instanceof Date) {
+      const plannedStartDate = moment(formValue.plannedStartDate);
+      this.project.plannedStartDate = plannedStartDate.format('YYYY-MM-DD');
+    } else {
+      this.project.plannedStartDate = formValue.plannedStartDate;
+    }
+
+    if (formValue.actualStartDate instanceof Date) {
+      const actualStartDate = moment(formValue.actualStartDate);
+      this.project.actualStartDate = actualStartDate.format('YYYY-MM-DD');
+    } else {
+      this.project.actualStartDate = formValue.actualStartDate;
+    }
+
+
       this.project.groupId = formValue.groupId;
     this.project.statusId = formValue.statusId;
     return this.project;
@@ -120,6 +139,7 @@ export class ProjectDetailComponent implements OnInit, OnChanges {
     this.projectForm = this.fb.group({
       projectID: '',
       projectName: ['', Validators.required],
+      isTemplate: this.createTemplate,
       projectDesc: '',
       projectManager: '',
       plannedStartDate: '',

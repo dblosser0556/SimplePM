@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { ProjectService } from '../../configuration/project/project.service';
-import { ErrorMsgService, ToastrType } from '../../../services';
-import { Project, Group, Status, LoggedInUser } from '../../../models';
-import { StatusService } from '../../configuration/status/status.service';
-import { GroupService } from '../../configuration/group/group.service';
-import { UtilityService } from '../../../services/utility.service';
-import { UserService } from '../../../services/user.service';
+import { ProjectService } from '../../services';
+import { ErrorMsgService, ToastrType } from '../../services';
+import { Project, Group, Status, LoggedInUser } from '../../models';
+import { StatusService } from '../configuration/status/status.service';
+import { GroupService } from '../configuration/group/group.service';
+import { UtilityService } from '../../services/utility.service';
+import { UserService } from '../../services/user.service';
 import { ActivatedRoute } from '@angular/router';
 import 'rxjs/add/operator/filter';
 
@@ -20,6 +20,7 @@ export class ProjectComponent implements OnInit {
   groups: Group[];
   status: Status[];
   projectManagers: LoggedInUser[];
+  isTemplate: Boolean = false;
 
   isLoading = false;
   currentTab = 'Details';
@@ -84,13 +85,13 @@ export class ProjectComponent implements OnInit {
         for (const month of this.currentProject.months) {
           month.phaseName = this.util.findPhaseName(month.phaseId);
         }
-        console.log(this.currentProject);
+
 
 
         this.isLoading = false;
       },
       error => {
-        this.errorMsg.showUserMessage(ToastrType.warning, 'Oops - Something Happened', error);
+        this.errorMsg.changeMessage(error);
       }
     );
   });

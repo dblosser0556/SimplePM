@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ProjectService } from '../../configuration/project/project.service';
+import { ProjectService } from '../../../services';
 import { ProjectList } from '../../../models';
 @Component({
   selector: 'app-projects',
@@ -30,11 +30,8 @@ export class ProjectsComponent implements OnInit {
   }
 
   getProjects() {
-    console.log(this.queryParams);
-
     this.projectService.getList(this.queryParams).subscribe( res => {
       this.projectList = res;
-      console.log(this.projectList);
     });
 
   }

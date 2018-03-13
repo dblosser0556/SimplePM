@@ -1,3 +1,48 @@
-<p>
-  project-group works!
-</p>
+<div class="container" fxLayout="column" fxLayoutGap="20px">
+  <div class="card">
+    <div class="card-body">
+      <div *ngIf="isLoading">Loading Groups ...</div>
+      <table class="table" *ngIf="!isLoading">
+        <tr>
+          <th>Group Name</th>
+          <th>Description</th>
+          <th>Group Manager</th>
+          <th>Edit</th>
+          <th>Delete</th>
+        </tr>
+        <tr *ngFor="let item of items">
+          <td>
+            {{item.groupName}}
+          </td>
+          <td>
+            {{item.groupDesc}}
+          </td>
+          <td>
+            {{item.groupManagerName}}
+          </td>
+          <td>
+            <a (click)="edit(item)">
+              <i class="fas fa-edit" ></i>
+            </a>
+          </td>
+          <td>
+            <a ref (click)="onDelete(item.roleID)">
+              <i class="fas fa-trash"></i>
+            </a>
+          </td>
+        </tr>
+
+      </table>
+      <div class="card-body">
+        <button class="btn btn-primary" (click)="add()">
+          <i class="fas fa-plus-square" ></i>Add New</button>
+      </div>
+    </div>
+  </div>
+  <div class="card" *ngIf="selectedItem">
+    <div class="card-body">
+      <app-group-detail [item]="selectedItem" [pmList]="managers" (itemChange)="updateList($event)" ></app-group-detail>
+    </div>
+  </div>
+</div>
+

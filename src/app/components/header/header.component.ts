@@ -33,7 +33,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   setSideBarActiveStatus() {
     this.sideBarActive = !this.sideBarActive;
     this.config.setSideBarActiveState(this.sideBarActive);
-    console.log(this.sideBarActive.valueOf());
+ 
   }
 
 }

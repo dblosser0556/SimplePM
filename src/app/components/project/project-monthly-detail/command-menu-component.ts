@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, ElementRef, Renderer2, Output, EventEmitter } from '@angular/core';
-import { CapWeightPercent, Project } from '../../../../models';
+import { CapWeightPercent, Project } from '../../../models';
 
 
 @Component({

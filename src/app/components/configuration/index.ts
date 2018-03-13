@@ -14,7 +14,7 @@ import { StatusDetailComponent } from './status/status-detail/status-detail.comp
 import { ResourceTypeComponent } from './resource-type/resource-type.component';
 import { ResourceTypeDetailComponent } from './resource-type/resource-type-detail/resource-type-detail.component';
 
-import { ProjectComponent } from './project/project.component';
+import { ProjectConfigComponent } from './project/project-config.component';
 
 import { AccountListComponent } from './account/account-list.component';
 import { RegistrationFormComponent } from './account/registration-form/registration-form.component';
@@ -23,6 +23,7 @@ import { RootComponent } from './root/root.component';
 
 
 import { GroupComponent } from './group/group.component';
+import { GroupDetailComponent } from './group/group-detail/group-detail.component';
 
 export {
     RootComponent,
@@ -38,8 +39,9 @@ export {
     StatusDetailComponent,
     ResourceTypeComponent,
     ResourceTypeDetailComponent,
-    ProjectComponent,
+    ProjectConfigComponent,
     GroupComponent,
+    GroupDetailComponent,
 };
 
 export default [
@@ -56,6 +58,7 @@ export default [
     StatusDetailComponent,
     ResourceTypeComponent,
     ResourceTypeDetailComponent,
-    ProjectComponent,
-    GroupComponent
+    ProjectConfigComponent,
+    GroupComponent,
+    GroupDetailComponent
 ];

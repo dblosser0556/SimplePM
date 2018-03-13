@@ -4,12 +4,12 @@ import {
   Phase, ResourceType, FixedPriceType, Role, FixedPrice,
   FixedPriceMonth,
   CapWeightPercent
-} from '../../../../models';
-import { ProjectService } from '../../../configuration/project/project.service';
-import { ErrorMsgService, ToastrType} from '../../../../services';
-import { UtilityService } from '../../../../services/utility.service';
+} from '../../../models';
+import { ProjectService } from '../../../services';
+import { ErrorMsgService, ToastrType} from '../../../services';
+import { UtilityService } from '../../../services/utility.service';
 import { ElementRef } from '@angular/core/src/linker/element_ref';
-import { ConfigService } from '../../../../services/config.service';
+import { ConfigService } from '../../../services/config.service';
 
 
 
@@ -29,7 +29,7 @@ export class ProjectMonthlyDetailComponent implements OnInit {
 
   @Input() project: Project;
   @Input() selectedView: string;
-  
+
 
 
   phaseList: Phase[] = [];
@@ -100,14 +100,14 @@ export class ProjectMonthlyDetailComponent implements OnInit {
 
   }
 
-  
+
   getSelectedCells(event) {
     // this get the set of cells that are selected in the month columns
-    // using the multiselected cell directive.  
+    // using the multiselected cell directive.
     // It returns a set of TD elememnts
     this.selectedCells = event;
   }
-  
+
   saveProject() {
     this.projectService.update(this.project.projectId, this.project).subscribe(
       results => {
@@ -179,7 +179,7 @@ export class ProjectMonthlyDetailComponent implements OnInit {
     resource.vendor = '';
     resource.totalActualEffort = 0;
     resource.totalPlannedEffort = 0;
-    
+
 
 
     this.project.resources.push(resource);
@@ -213,7 +213,7 @@ export class ProjectMonthlyDetailComponent implements OnInit {
     resourceMonth.plannedEffortCapPercent = 1;
     resourceMonth.plannedEffortStyle = 1;
     resourceMonth.plannedEffortInError = false;
-  
+
     resource.resourceMonths.push(resourceMonth);
 
   }
@@ -511,13 +511,13 @@ export class ProjectMonthlyDetailComponent implements OnInit {
     let totalPlannedCapital = 0;
 
     for (const resource of this.project.resources) {
-      totalActualCapital += resource.resourceMonths[i].actualEffort * resource.rate * 
+      totalActualCapital += resource.resourceMonths[i].actualEffort * resource.rate *
           resource.resourceMonths[i].actualEffortCapPercent;
-      totalPlannedCapital += resource.resourceMonths[i].plannedEffort * resource.rate * 
+      totalPlannedCapital += resource.resourceMonths[i].plannedEffort * resource.rate *
           resource.resourceMonths[i].plannedEffortCapPercent;
-      totalActualExpense += resource.resourceMonths[i].actualEffort * resource.rate * 
+      totalActualExpense += resource.resourceMonths[i].actualEffort * resource.rate *
           (1 - resource.resourceMonths[i].actualEffortCapPercent);
-      totalPlannedExpense += resource.resourceMonths[i].plannedEffort * resource.rate * 
+      totalPlannedExpense += resource.resourceMonths[i].plannedEffort * resource.rate *
           (1 - resource.resourceMonths[i].plannedEffortCapPercent);
     }
 
@@ -558,7 +558,7 @@ export class ProjectMonthlyDetailComponent implements OnInit {
     } else {
       this.errors.showUserMessage(ToastrType.info, 'Sorry', 'At the end', false, 2000);
     }
-      
+
   }
 
   scrollLeft() {
@@ -571,7 +571,7 @@ export class ProjectMonthlyDetailComponent implements OnInit {
   }
 
   pageLeft() {
-    if (this.fcol - this.pageSize > 0){
+    if (this.fcol - this.pageSize > 0) {
       this.lcol -= this.pageSize;
       this.fcol -= this.pageSize;
     } else if (this.fcol > 0) {

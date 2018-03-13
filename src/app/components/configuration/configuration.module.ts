@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from '../../modules/shared.module';
-import { ProjectDetailModule } from '../project-detail/project-detail.module';
+import { ProjectModule } from '../project/project.module';
 
 import { routing } from './configuration.routing';
 
@@ -17,7 +17,6 @@ import { RoleService } from './role/role.service';
 import { StatusService } from './status/status.service';
 import { GroupService } from './group/group.service';
 import { ResourceTypeService } from './resource-type/resource-type.service';
-import { ProjectService } from './project/project.service';
 import { PhaseService } from './phase/phase.service';
 import { UserService } from '../../services';
 
@@ -26,7 +25,7 @@ import {
   RootComponent,
   PhaseListComponent,
   PhaseDetailComponent,
-  ProjectComponent,
+  ProjectConfigComponent,
   StatusComponent,
   ResourceTypeComponent,
   RoleComponent,
@@ -36,13 +35,10 @@ import {
   StatusDetailComponent,
   ResourceTypeDetailComponent,
   AccountListComponent,
-  RegistrationFormComponent
-
-
+  RegistrationFormComponent,
+  GroupComponent,
+  GroupDetailComponent
 } from '../configuration';
-
-import { GroupComponent } from './group/group.component';
-
 
 
 
@@ -54,13 +50,13 @@ import { GroupComponent } from './group/group.component';
     SharedModule,
     ReactiveFormsModule,
     AppBootstrapModule,
-    ProjectDetailModule
+    ProjectModule
   ],
   declarations: [
     RootComponent,
     PhaseListComponent,
     PhaseDetailComponent,
-    ProjectComponent,
+    ProjectConfigComponent,
     StatusComponent,
     ResourceTypeComponent,
     RoleComponent,
@@ -71,7 +67,8 @@ import { GroupComponent } from './group/group.component';
     ResourceTypeDetailComponent,
     GroupComponent,
     AccountListComponent,
-    RegistrationFormComponent
+    RegistrationFormComponent,
+    GroupDetailComponent
   ],
   providers: [
     PhaseService,
@@ -79,7 +76,6 @@ import { GroupComponent } from './group/group.component';
     RoleService,
     StatusService,
     ResourceTypeService,
-    GroupService,
-    ProjectService]
+    GroupService]
 })
 export class ConfigurationModule { }

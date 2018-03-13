@@ -1,25 +1,26 @@
 import { Component, OnInit } from '@angular/core';
-import { ProjectService } from './project.service';
+import { ProjectService } from '../../../services';
 import { Project, ProjectList, Status, Group, LoggedInUser } from '../../../models';
 import { Observable } from 'rxjs/Observable';
-import { ErrorMsgService } from '../../../services';
+import { ErrorMsgService, ToastrType } from '../../../services';
 import { StatusService } from '../status/status.service';
 import { GroupService } from '../group/group.service';
 import { UserService } from '../../../services/user.service';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import '../../../rxjs-extensions';
 
 @Component({
-  selector: 'app-project',
-  templateUrl: './project.component.html',
-  styleUrls: ['./project.component.scss']
+  selector: 'app-project-config',
+  templateUrl: './project-config.component.html',
+  styleUrls: ['./project-config.component.scss']
 })
-export class ProjectComponent implements OnInit {
+export class ProjectConfigComponent implements OnInit {
 
 
   projects: ProjectList[];
   projectList: ProjectList[];
-
+  isTemplate = false;
   selectedProject: Project;
   groups: Group[] = [];
   status: Status[] = [];
@@ -32,7 +33,9 @@ export class ProjectComponent implements OnInit {
       private errorMsg: ErrorMsgService,
       private statusService: StatusService,
       private groupService: GroupService,
-      private userService: UserService) {
+      private userService: UserService,
+      private route: ActivatedRoute,
+      private router: Router) {
   }
 
   ngOnInit() {
@@ -42,30 +45,36 @@ export class ProjectComponent implements OnInit {
     this.getPMList();
   }
 
-
-
-
   onDelete(id: number) {
     if (confirm('Are you sure to delete this record?') === true) {
       this.projectService.delete(id)
         .subscribe(x => {
-          // this.snackBar.open('Project been deleted', '', { duration: 2000 });
+          this.errorMsg.showUserMessage(ToastrType.success, 'Success', 'Project been deleted');
           this.getList();
         },
         error =>  this.errorMsg.changeMessage(error));
     }
   }
 
-  getList() {
+
+
+  getList(): any {
     this.isLoading = true;
-    this.projectService.getList()
-      .subscribe(results => {
-        this.projects = results;
-        this.isLoading = false;
-        console.log(this.projects);
-      },
-      error => this.errorMsg.changeMessage(error));
     this.selectedProject = undefined;
+    this.route.queryParams.subscribe(
+      params => {
+        const queryParams = {...params.keys, ...params};
+        if (params['$filter'] === 'IsTemplate eq true') {
+          this.isTemplate = true;
+        }
+        this.projectService.getList(queryParams)
+        .subscribe(results => {
+          this.projects = results;
+          this.isLoading = false;
+        },
+        error => this.errorMsg.changeMessage(error));
+      }
+    );
   }
 
   getStatusList() {
@@ -82,9 +91,7 @@ export class ProjectComponent implements OnInit {
 
   getPMList() {
     this.userService.getUserInRoles('editProjects').subscribe(
-      results => { this.projectManagers = results;
-      console.log('ProjectM', this.projectManagers);
-      console.log('PM ret: ', results) },
+      results => { this.projectManagers = results; },
       error => this.errorMsg.changeMessage(error));
   }
 
@@ -98,5 +105,9 @@ export class ProjectComponent implements OnInit {
 
   updateList(event: any) {
     this.getList();
+  }
+
+  showDetails(id: number) {
+    this.router.navigate(['/configuration/project-details'], { queryParams: { projectId: id } });
   }
 }
