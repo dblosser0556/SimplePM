@@ -13,15 +13,15 @@ import { AuthGuard } from '../../guard/auth.guard';
 export const routing: ModuleWithProviders = RouterModule.forChild([
   {
     path: 'dashboard',
-    component: RootComponent, canActivate: [AuthGuard],
+    component: RootComponent, canActivate: [AuthGuard], data: {'title': 'dashboard', 'breadcrumb': 'dashboard'},
 
     children: [
-      { path: '', component: HomeComponent },
-      { path: 'home', component: HomeComponent },
-      { path: 'divisions', component: DivisionsComponent },
-      { path: 'programs', component: ProgramsComponent },
-      { path: 'projects', component: ProjectsComponent },
-      { path: 'project', component: ProjectComponent },
+      { path: '', component: HomeComponent, data: {'title': 'Home', 'breadcrumb': 'Home'} },
+      { path: 'home', component: HomeComponent, data: {'title': 'Home', 'breadcrumb': 'Home'} },
+      { path: 'divisions', component: DivisionsComponent, data: {'title': 'Divisions', 'breadcrumb': 'Divisions'} },
+      { path: 'programs', component: ProgramsComponent, data: {'title': 'Programs', 'breadcrumb': 'Programs'} },
+      { path: 'projects', component: ProjectsComponent, data: {'title': 'Projects', 'breadcrumb': 'Projects'} },
+      { path: 'project', component: ProjectComponent, data: {'title': 'Project', 'breadcrumb': 'Project'} },
     ]
   }
 ]);

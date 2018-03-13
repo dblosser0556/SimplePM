@@ -31,7 +31,6 @@ export class RootComponent implements OnInit, OnDestroy {
       active => this.active = active);
     this.subErrors = this.errMessageService.currentMessage.subscribe(
       message => {
-        this.errorMsg =  message;
         this.errMessageService.showUserMessage(ToastrType.warning, 'Oops', message);
         console.log(this.errorMsg);
       });

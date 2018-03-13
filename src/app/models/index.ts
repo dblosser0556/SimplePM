@@ -5,6 +5,8 @@ export * from './role';
 export * from './loggedInUser';
 export * from './user-role';
 
+export * from './breadcrumb';
+
 export * from './phase';
 export * from './project-status';
 export * from './resource-type';

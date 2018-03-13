@@ -12,12 +12,14 @@ import { DashboardModule } from './components/dashboard/dashboard.module';
 import { ConfigurationModule } from './components/configuration/configuration.module';
 
 import { routing } from './app.routing';
+import { BreadcrumbsComponent } from './components/breadcrumbs/breadcrumbs.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
     HeaderComponent,
+    BreadcrumbsComponent,
   ],
   imports: [
     LoginModule,
