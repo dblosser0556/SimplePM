@@ -68,13 +68,6 @@ export class UserService {
     return this.http.get<LoggedInUser>(this._url + '/accounts/user/' + userName, { headers: headerOptions })
       .map(res => {
         let _loggedInUser = new LoggedInUser();
-      /*   _loggedInUser.currentUser.email = res.currentUser.email;
-        _loggedInUser.currentUser.firstName = res.currentUser.firstName;
-        _loggedInUser.currentUser.lastName = res.currentUser.lastName;
-        _loggedInUser.currentUser.userId = res.currentUser.userId;
-        _loggedInUser.currentUser.password = res.currentUser.password;
-        _loggedInUser.currentUser.userName = res.currentUser.userName;
-        _loggedInUser.roles = res.roles; */
         _loggedInUser = res;
 
         this.loggedInUser = _loggedInUser;
@@ -117,12 +110,9 @@ export class UserService {
       .set('Content-Type', 'application/json')
       .set('Authorization', 'Bearer ' + authToken);
     return this.http.get<LoggedInUser[]>(this._url + '/accounts/role/' + roleName, { headers: headerOptions })
-      .map(res => 
-        {this.usersInRole = res;
-          
-        console.log('PM in service:', this.usersInRole);
-        console.log('PM ret in svc: ', res); 
-        return res;}
+      .map(res =>
+        { this.usersInRole = res;
+        return res; }
       )
       .catch(x => this.handleAuthError(x));
   }

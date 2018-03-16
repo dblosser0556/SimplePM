@@ -15,12 +15,14 @@ import { ConfigurationModule } from './components/configuration/configuration.mo
 import { routing } from './app.routing';
 import { BreadcrumbsComponent } from './components/breadcrumbs/breadcrumbs.component';
 
+
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
     HeaderComponent,
     BreadcrumbsComponent,
+    
   ],
   imports: [
     LoginModule,

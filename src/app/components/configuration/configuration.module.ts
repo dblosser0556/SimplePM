@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from '../../modules/shared.module';
 import { ProjectModule } from '../project/project.module';
+import { BudgetModule } from '../budget/budget.module';
 
 import { routing } from './configuration.routing';
 
@@ -50,7 +51,8 @@ import {
     SharedModule,
     ReactiveFormsModule,
     AppBootstrapModule,
-    ProjectModule
+    ProjectModule,
+    BudgetModule
   ],
   declarations: [
     RootComponent,

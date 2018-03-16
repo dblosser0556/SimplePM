@@ -5,7 +5,7 @@ import { catchError } from 'rxjs/operators';
 import { Http, Response, Headers, RequestOptions, RequestMethod } from '@angular/http';
 
 export abstract class AbstractRestService<T> {
-    
+
     constructor(protected _http: Http,
         protected actionUrl: string, protected user: UserService) {
     }
@@ -22,7 +22,7 @@ export abstract class AbstractRestService<T> {
             );
     }
 
-  
+
 
     getOne(id: number): Observable<T> {
         const url = `${this.actionUrl}/${id}`;

@@ -53,9 +53,10 @@
       </div>
     </div>
   </div>
-  <div class="card" *ngIf="selectedProject">
-    <div class="card-body">
+  <div *ngIf="selectedProject">
+    
       <app-project-detail [project]="selectedProject" [groupList]="groups" [createTemplate]="isTemplate" [statusList]="status" [pmList]="projectManagers" (projectChange)="updateList($event)"></app-project-detail>
-    </div>
+    
+    
   </div>
 </div>

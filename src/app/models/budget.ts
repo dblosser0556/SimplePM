@@ -1,19 +1,24 @@
 
-
+export enum BudgetType {
+    Capital,
+    Expense
+}
 export class Budget {
     budgetId: number;
-    budgetType: string;
+    budgetType: BudgetType;
     approvedDateTime: string;
     amount: number;
     projectId: number;
+    groupId: number;
 
-    constructor(protected instanceData?: Budget) {
+
+    constructor(private instanceData?: Budget) {
         if (instanceData) {
             this.deserialize(instanceData);
         }
     }
 
-    protected deserialize(instanceData: Budget) {
+    private deserialize(instanceData: Budget) {
         // Note this.active will not be listed in keys since it's declared, but not defined
         const keys = Object.keys(this);
 
