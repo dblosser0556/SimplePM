@@ -17,8 +17,7 @@ import {HomeComponent,
   DivisionsComponent,
   ProgramsComponent,
   ProjectsComponent,
-  RootComponent,
-  ProjectCardComponent
+  RootComponent
  } from '../dashboard';
 
 
@@ -44,7 +43,7 @@ import {HomeComponent,
     ProgramsComponent,
     ProjectsComponent,
     RootComponent,
-    ProjectCardComponent],
+    ],
   providers: [AuthGuard ]
 })
 export class DashboardModule { }

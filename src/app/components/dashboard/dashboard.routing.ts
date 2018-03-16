@@ -21,6 +21,7 @@ export const routing: ModuleWithProviders = RouterModule.forChild([
       { path: 'divisions', component: DivisionsComponent, data: {'title': 'Divisions', 'breadcrumb': 'Divisions'} },
       { path: 'programs', component: ProgramsComponent, data: {'title': 'Programs', 'breadcrumb': 'Programs'} },
       { path: 'projects', component: ProjectsComponent, data: {'title': 'Projects', 'breadcrumb': 'Projects'} },
+      { path: 'myprojects', component: ProjectsComponent, data: {'title': 'MyProjects', 'breadcrumb': 'MyProjects'} },
       { path: 'project', component: ProjectComponent, data: {'title': 'Project', 'breadcrumb': 'Project'} },
     ]
   }

@@ -1,0 +1,57 @@
+<div>
+  <table class="table table-sm">
+    <thead>
+      <tr>
+        <th colspan="2">
+          Expense
+        </th>
+        <th colspan="2">Capital</th>
+      </tr>
+      <tr>
+        <th>Month</th>
+        <th>Planned</th>
+        <th>Actual To Date</th>
+        <th>Planned</th>
+        <th>Actual To Date</th>
+
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let month of project.months">
+        <td>{{project.startDate().setMonth(project.startDate().getMonth() + month.monthNo - 1) |date:'MMM-yy' }}</td>
+        <td>{{month.totalPlannedExpense | currency:'USD':'symbol-narrow':'0.0-0'}} </td>
+        <td>{{month.totalActualExpense | currency:'USD':'symbol-narrow':'0.0-0'}}</td>
+        <td>{{month.totalPlannedCapital | currency:'USD':'symbol-narrow':'0.0-0'}}</td>
+        <td>{{month.totalActualCapital | currency:'USD':'symbol-narrow':'0.0-0'}}</td>
+      </tr>
+    </tbody>
+    <tfoot>
+
+      <tr>
+        <td>Total</td>
+        <td>Exp Budget:</td>
+        <td>{{projectSummary.totalExpenseBudget | currency:'USD':'symbol-narrow':'0.0-0'}}</td>
+        <td>Cap Budget:</td>
+        <td>{{projectSummary.totalCapitalBudget | currency:'USD':'symbol-narrow':'0.0-0'}}</td>
+      </tr>
+      <tr>
+        <td>Total</td>
+        <td>{{projectSummary.totalPlannedExpense | currency:'USD':'symbol-narrow':'0.0-0'}} </td>
+        <td>{{projectSummary.totalActualExpense | currency:'USD':'symbol-narrow':'0.0-0'}}</td>
+
+        <td>{{projectSummary.totalPlannedCapital | currency:'USD':'symbol-narrow':'0.0-0'}}</td>
+        <td>{{projectSummary.totalActualCapital | currency:'USD':'symbol-narrow':'0.0-0'}}</td>
+      </tr>
+      <tr>
+        <td>Diff</td>
+        <td>{{projectSummary.totalExpenseBudget - projectSummary.totalPlannedExpense | currency:'USD':'symbol-narrow':'0.0-0'}}</td>
+        <td>{{projectSummary.totalExpenseBudget - projectSummary.totalActualExpense | currency:'USD':'symbol-narrow':'0.0-0'}}</td>
+
+        <td>{{projectSummary.totalCapitalBudget - projectSummary.totalPlannedCapital | currency:'USD':'symbol-narrow':'0.0-0'}}</td>
+        <td>{{projectSummary.totalCapitalBudget - projectSummary.totalActualCapital | currency:'USD':'symbol-narrow':'0.0-0'}}</td>
+      </tr>
+
+
+    </tfoot>
+  </table>
+</div>

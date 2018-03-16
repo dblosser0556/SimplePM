@@ -42,6 +42,7 @@ export class GroupComponent implements OnInit {
       this.itemService.delete(id)
         .subscribe(x => {
            // this.snackBar.open('Phase has been deleted', '', { duration: 2000 });
+          this.getGroupList();
           this.getList();
         },
         error =>  this.errorMsg.changeMessage(error));
@@ -61,7 +62,8 @@ export class GroupComponent implements OnInit {
 
   getGroupList() {
     this.itemService.getOptionList().subscribe(
-      results => this.groupOptionsList = results,
+      results => {this.groupOptionsList = results;
+      console.log('groupOptions', this.groupOptionsList);},
       error => this.errorMsg.changeMessage(error));
   }
   getPMList() {
@@ -81,6 +83,7 @@ export class GroupComponent implements OnInit {
   }
 
   updateList(event: any) {
+    this.getGroupList();
     this.getList();
   }
 

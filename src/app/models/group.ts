@@ -5,9 +5,9 @@ export class Group {
     level: number;
     levelDesc: string;
     
-    levelId: number;
-    left: number;
-    right: number;
+    levelId = 0;
+    lft = 0;
+    rgt = 0;
 
     groupName: string;
     groupDesc: string;

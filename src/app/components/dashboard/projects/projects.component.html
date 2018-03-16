@@ -1,7 +1,7 @@
 <div class="container-fluid">
   <div class="card-deck">
     <div *ngFor="let curProject of projectList">
-      <app-project-card [project]="curProject"></app-project-card>
+      <app-project-card [projectSummary]="curProject" [allowEdit]="allowEdit"></app-project-card>
     </div>
   </div>
 </div>

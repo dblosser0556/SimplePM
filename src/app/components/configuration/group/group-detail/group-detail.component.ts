@@ -49,7 +49,7 @@ export class GroupDetailComponent implements OnInit, OnChanges {
       itemName: this.item.groupName,
       itemDesc: this.item.groupDesc,
       itemManager: this.item.groupManager,
-      groupId: this.item.groupId,
+      parentId: this.item.parentId,
       levelDesc: this.item.levelDesc,
       level: this.item.level} );
   }
@@ -61,7 +61,7 @@ export class GroupDetailComponent implements OnInit, OnChanges {
     }
 
     const item: Group = this.getGroupFromFormValue(this.itemForm.value);
-    if (item.groupId !== null) {
+    if (item.groupId !== null && item.groupId !== undefined) {
       this.itemService.update(item.groupId, item).subscribe(data => {
         // this.snackBar.open('Project Cost Type has been updated', '', {duration: 2000});
         this.itemChange.emit(item);
@@ -94,8 +94,9 @@ export class GroupDetailComponent implements OnInit, OnChanges {
     item.groupId = formValue.itemId;
     item.groupName = formValue.itemName;
     item.groupDesc = formValue.itemDesc;
-    item.groupId = formValue.groupId;
+    item.parentId = formValue.parentId;
     item.levelDesc = formValue.levelDesc;
+    item.groupManager = formValue.itemManager;
     item.level = formValue.level;
     return item;
 
@@ -105,7 +106,7 @@ export class GroupDetailComponent implements OnInit, OnChanges {
     this.itemForm = this.fb.group({
       itemId: '',
       parentId: '',
-      level: '',
+      level: [{value: 0, disabled: true}],
       levelDesc: '',
       itemName: ['', Validators.required],
       itemDesc: '',
@@ -119,7 +120,7 @@ export class GroupDetailComponent implements OnInit, OnChanges {
 
   cancel() { this.itemChange.emit(this.item); }
 
-  updateLevel(groupId: number) {
+  onChange(groupId: number) {
     this.groupOptions.forEach(g => {
       if (g.groupId = groupId) {
         this.itemForm.patchValue({'level': g.level + 1 } );

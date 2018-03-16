@@ -5,7 +5,7 @@ import { ProjectsComponent } from './projects/projects.component';
 import { RootComponent } from './root/root.component';
 
 
-import { ProjectCardComponent } from './projects/project-card/project-card.component';
+
 
 export {
     HomeComponent,
@@ -13,7 +13,6 @@ export {
     ProgramsComponent,
     ProjectsComponent,
     RootComponent,
-    ProjectCardComponent
 };
 
 export default [
@@ -22,5 +21,4 @@ export default [
     ProgramsComponent,
     ProjectsComponent,
     RootComponent,
-    ProjectCardComponent
 ];
