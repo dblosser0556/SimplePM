@@ -1,46 +1,44 @@
-
-  <div class="modal-header">
-    <div class="modal-title pull-left">
-      {{title}}
-    </div>
-    <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()"></button>
-    <div class="modal-body">
-      <div *ngIf="isLoading">Loading Budgets ...</div>
-      <table class="table table-sm" *ngIf="!isLoading">
-        <tr>
-          <td>Budget Type</td>
-          <td>Approved Date</td>
-          <td>Amount</td>
-          <td>Edit</td>
-          <td>Delete</td>
-        </tr>
-        <tr *ngFor="let budget of budgets">
-          <td>
-            {{budget.budgetType}}
-          </td>
-          <td>
-            {{budget.approvedDateTime}}
-          </td>
-          <td>
-              {{budget.amount | currency:'USD':'symbol-narrow':'0.0-0'}}
-            </td>
-          <td>
-            <a (click)="edit(budget)">
-              <i class="fas fa-edit"></i>
-            </a>
-          </td>
-          <td>
-            <a ref (click)="onDelete(budget.budgetId)">
-              <i class="fas fa-trash"></i>
-            </a>
-          </td>
-        </tr>
-
-      </table>
-      <div class="card-body">
-        <button class="btn btn-primary" click="modalRef.hide()">
-          <i class="fas fa-plus-square"></i>Close</button>
-      </div>
-    </div>
+<div class="modal-header">
+  <div class="modal-title pull-left">
+    {{title}}
   </div>
- 
+  <button type="button" class="close pull-right" aria-label="Close" (click)="bsModalRef.hide()"></button>
+</div>
+<div class="modal-body">
+  <div *ngIf="isLoading">Loading Budgets ...</div>
+  <table class="table table-sm" *ngIf="!isLoading">
+    <tr>
+      <td>Budget Type</td>
+      <td>Approved Date</td>
+      <td>Amount</td>
+      <td>Edit</td>
+      <td>Delete</td>
+    </tr>
+    <tr *ngFor="let budget of budgets">
+      <td>
+        {{budget.budgetType}}
+      </td>
+      <td>
+        {{budget.approvedDateTime}}
+      </td>
+      <td>
+        {{budget.amount | currency:'USD':'symbol-narrow':'0.0-0'}}
+      </td>
+      <td>
+        <a (click)="edit(budget)">
+          <i class="fas fa-edit"></i>
+        </a>
+      </td>
+      <td>
+        <a ref (click)="onDelete(budget.budgetId)">
+          <i class="fas fa-trash"></i>
+        </a>
+      </td>
+    </tr>
+
+  </table>
+</div>
+<div class="modal-footer">
+  <button class="btn btn-primary pull-right" (click)="bsModalRef.hide()">
+    <i class="fas fa-plus-square"></i>Close</button>
+</div>

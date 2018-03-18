@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Budget } from '../../models';
 import { BudgetService } from '../../services';
+import { BsModalRef } from 'ngx-bootstrap/modal';
 
 @Component({
   selector: 'app-budget',
@@ -8,10 +9,10 @@ import { BudgetService } from '../../services';
   styleUrls: ['./budget.component.scss']
 })
 export class BudgetComponent implements OnInit {
-  @Input() budgets: Budget[];
-  @Input() groupId: number;
-  @Input() projectId: number;
-  @Input() title: string;
+  budgets: Budget[];
+  groupId: number;
+  projectId: number;
+  title: string;
 
   selectedBudget: Budget;
   error: any;
@@ -19,11 +20,12 @@ export class BudgetComponent implements OnInit {
   
 
   constructor(private budgetService: BudgetService,
+    public bsModalRef: BsModalRef
     ) {
   }
 
   ngOnInit() {
-      this.getList();
+      //this.getList();
   }
 
 

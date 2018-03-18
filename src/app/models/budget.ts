@@ -20,12 +20,10 @@ export class Budget {
 
     private deserialize(instanceData: Budget) {
         // Note this.active will not be listed in keys since it's declared, but not defined
-        const keys = Object.keys(this);
+        const keys = Object.keys(instanceData);
 
         for (const key of keys) {
-            if (instanceData.hasOwnProperty(key)) {
-                this[key] = instanceData[key];
-            }
+           this[key] = instanceData[key];
         }
     }
 }

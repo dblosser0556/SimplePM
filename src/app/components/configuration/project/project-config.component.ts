@@ -100,7 +100,11 @@ export class ProjectConfigComponent implements OnInit {
   }
 
   edit(project: Project) {
-    this.selectedProject = project;
+    this.projectService.getOne(project.projectId).subscribe(
+      res => this.selectedProject = res,
+      error => this.errorMsg.changeMessage(error)
+    );
+
   }
 
   updateList(event: any) {
