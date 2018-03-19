@@ -5,6 +5,7 @@ import { BudgetService, ToastrType } from '../../../services';
 import { Subject } from 'rxjs/Subject';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { ErrorMsgService } from '../../../services';
+import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 
 export interface CreateBudget {
   groupId: number;
@@ -24,10 +25,11 @@ export interface CreateBudget {
 
 export class BudgetDetailComponent implements OnInit, OnChanges {
 
+  title: string;
   budget: Budget;
-
+  colorTheme = 'theme-blue';
   public onClose: Subject<boolean>;
-
+  bsConfig: Partial<BsDatepickerConfig>;
 
   budgetForm: FormGroup;
   error: any;
@@ -40,13 +42,23 @@ export class BudgetDetailComponent implements OnInit, OnChanges {
      }
 
   ngOnInit() {
+    this.bsConfig = Object.assign({}, {
+      containerClass: this.colorTheme,
+      dateInputFormat: 'YYYY-MM-DD',
+      dateOutputFormat: 'YYYY-MM-DD'
+    });
     this.createForm();
     this.onClose = new Subject();
+    if (this.budget.budgetType === BudgetType.Capital) {
+      this.title = 'Add Capital Budget';
+    } else {
+      this.title = 'Add Expense Budget';
+    }
   }
 
   ngOnChanges() {
     this.budgetForm.reset( {
-      budgetID: this.budget.budgetId,
+      budgetId: this.budget.budgetId,
       groupId: this.budget.groupId,
       projectId: this.budget.projectId,
       budgetType: this.budget.budgetType,
@@ -63,7 +75,7 @@ export class BudgetDetailComponent implements OnInit, OnChanges {
     const budget: Budget = this.getBudgetFromFormValue(this.budgetForm.value);
     if (budget.budgetId !== null) {
       this.budgetService.update(budget.budgetId, budget).subscribe(data => {
-      this.errMsg.showUserMessage(ToastrType.info, 'Success', 'Budget has been updated');
+      this.errMsg.showUserMessage(ToastrType.info, 'Success', 'Budget has been added');
       this.onClose.next(true);
       this._bsModalRef.hide();
       },
@@ -93,8 +105,8 @@ export class BudgetDetailComponent implements OnInit, OnChanges {
     budget = new Budget();
 
     budget.budgetId = formValue.budgetId;
-    budget.projectId = formValue.budgetName;
-    budget.groupId = formValue.budgetDesc;
+    budget.projectId = formValue.projectId;
+    budget.groupId = formValue.groupId;
     budget.budgetType = formValue.budgetType;
     budget.approvedDateTime = formValue.approvedDateTime;
     budget.amount = formValue.amount;
@@ -104,12 +116,12 @@ export class BudgetDetailComponent implements OnInit, OnChanges {
 
   createForm() {
     this.budgetForm = this.fb.group({
-      budgetId: '',
+      budgetId: this.budget.budgetId,
       groupId: this.budget.groupId,
       projectId: this.budget.projectId,
-      budgetType: ['', Validators.required],
-      approvedDateTime: '',
-      amount: ''
+      budgetType: this.budget.budgetType,
+      approvedDateTime: ['', Validators.required],
+      amount: ['', Validators.required]
     }
     );
   }
@@ -118,7 +130,7 @@ export class BudgetDetailComponent implements OnInit, OnChanges {
   revert() {this.ngOnChanges(); }
 
   cancel() {
-    this.onClose.next(true);
+    this.onClose.next(false);
     this._bsModalRef.hide();
   }
 

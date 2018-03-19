@@ -42,6 +42,7 @@ export class ProjectDetailComponent implements OnInit, OnChanges {
   expBudget: number;
 
 
+
   projectForm: FormGroup;
   error: any;
   colorTheme = 'theme-blue';
@@ -68,15 +69,13 @@ export class ProjectDetailComponent implements OnInit, OnChanges {
     this.expBudget = 0;
     this.capBudget = 0;
     if (this.project.budgets !== undefined) {
-      this.project.budgets.forEach(
-        budget => {
-          if (budget.budgetType = BudgetType.Capital) {
-            this.capBudget += budget.amount;
-          } else {
-            this.expBudget += this.expBudget;
-          }
+      for (const budget of this.project.budgets) {
+        if (budget.budgetType === BudgetType.Capital) {
+          this.capBudget += budget.amount;
+        } else {
+          this.expBudget += budget.amount;
         }
-      );
+      }
     }
     this.projectForm.reset({
       projectID: this.project.projectId,
@@ -197,23 +196,25 @@ export class ProjectDetailComponent implements OnInit, OnChanges {
       projectId: this.project.projectId,
       title: this.project.projectName
     };
-    
-    this.modalRef = this.modalService.show(BudgetComponent, { initialState });
-      this.modalRef.content.onClose.subscribe(result => {
-        console.log('results', result);
-      });
-    }
 
-    addBudget(isCapital: boolean) {
-      const _budget = new Budget();
-      _budget.projectId = this.project.projectId;
-      _budget.groupId = null;
-      const initialState = {
-        budget: _budget
-      };
-      this.modalRef = this.modalService.show(BudgetDetailComponent, { initialState });
-      this.modalRef.content.onClose.subscribe(result => {
-        console.log('results', result);
-      });
-    }
+    this.modalRef = this.modalService.show(BudgetComponent, { initialState });
+    this.modalRef.content.onClose.subscribe(result => {
+      console.log('results', result);
+    });
   }
+
+  addBudget(isCapital: boolean) {
+    const _budget = new Budget();
+    _budget.budgetId = null;
+    _budget.projectId = this.project.projectId;
+    _budget.groupId = null;
+    _budget.budgetType = (isCapital) ? BudgetType.Capital : BudgetType.Expense;
+    const initialState = {
+      budget: _budget
+    };
+    this.modalRef = this.modalService.show(BudgetDetailComponent, { initialState });
+    this.modalRef.content.onClose.subscribe(result => {
+      console.log('results', result);
+    });
+  }
+}

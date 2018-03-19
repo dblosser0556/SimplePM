@@ -5,11 +5,11 @@ export class FixedPriceMonth {
     plannedCost: number  = null;
     plannedCostCapPercent: number  = null;
     plannedCostStyle: number = null;
-    plannedCostCapInError: boolean = false;
+    plannedCostCapInError = false;
     actualCost: number  = null;
     actualCostCapPercent: number  = null;
     actualCostStyle: number = null;
-    actualCostInError: boolean = false;
+    actualCostInError = false;
     fixedPriceId: number = null;
 
     

@@ -1,7 +1,7 @@
 
 export enum BudgetType {
-    Capital,
-    Expense
+    Capital = 0,
+    Expense = 1
 }
 export class Budget {
     budgetId: number;
@@ -23,7 +23,15 @@ export class Budget {
         const keys = Object.keys(instanceData);
 
         for (const key of keys) {
-           this[key] = instanceData[key];
+            if (key === 'budgetType') {
+                if (instanceData[key] === 0 ) {
+                    this.budgetType = BudgetType.Capital;
+                } else {
+                    this.budgetType = BudgetType.Expense;
+                }
+            } else {
+                this[key] = instanceData[key];
+            }
         }
     }
 }
