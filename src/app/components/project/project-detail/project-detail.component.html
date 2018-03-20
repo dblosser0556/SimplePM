@@ -42,6 +42,16 @@
           <input type="checkbox" class="form-check-input" id="exampleCheck1" disabled="true" formControlName="isTemplate">
           <label class="form-check-label" for="exampleCheck1">Is Template</label>
         </div>
+        <div class="w-33 p-3 form-group" *ngIf="project.months.length>0">
+          <button class="btn btn-danger" (click)="removePeriods()"><i class="fas fa-trash"></i>Remove Months</button>
+        </div>
+        <div class="w-33 p-3 form-group" *ngIf="project.months.length==0&&project.projectId!=null">
+          <label class="center-block">Project Template:</label>
+          <select class="form-control" formControlName="templateId" (change)="selectTemplate($event.target.value)">
+            <option [value]=-1>--Select--</option>
+            <option *ngFor="let template of  templateList" [value]="template.projectId">{{template.projectName}}</option>
+          </select>
+        </div>
       </div>
 
       <div class="row">
@@ -70,9 +80,9 @@
       <div class="form-group-row">
         <button class="btn btn-primary" type="submit" [disabled]="!projectForm.valid">
           <i class="fas fa-save"></i>Save</button>
-        <button type="button" class="btn btn-warning" (click)="revert()">
+        <button type="button" class="btn btn-warning" (click)="revert()" [disabled]="!projectForm.dirty">
           <i class="fas fa-window-restore"></i>Reset</button>
-        <button type="button" class="btn btn-warning" (click)="cancel()">
+        <button *ngIf="selectedView!=Details" type="button" class="btn btn-warning" (click)="cancel()">
           <i class="fas fa-ban"></i>Cancel</button>
       </div>
 

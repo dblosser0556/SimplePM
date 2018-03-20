@@ -20,9 +20,17 @@ export const routing: ModuleWithProviders = RouterModule.forChild([
       { path: 'home', component: HomeComponent, data: {'title': 'Home', 'breadcrumb': 'Home'} },
       { path: 'divisions', component: DivisionsComponent, data: {'title': 'Divisions', 'breadcrumb': 'Divisions'} },
       { path: 'programs', component: ProgramsComponent, data: {'title': 'Programs', 'breadcrumb': 'Programs'} },
-      { path: 'projects', component: ProjectsComponent, data: {'title': 'Projects', 'breadcrumb': 'Projects'} },
-      { path: 'myprojects', component: ProjectsComponent, data: {'title': 'MyProjects', 'breadcrumb': 'MyProjects'} },
-      { path: 'project', component: ProjectComponent, data: {'title': 'Project', 'breadcrumb': 'Project'} },
+      { path: 'projects', data: {'title': 'Projects', 'breadcrumb': 'Projects'},
+        children: [
+          { path: '', component: ProjectsComponent, data: {'title': 'Projects', 'breadcrumb': 'Projects'} },
+          { path: 'project', component: ProjectComponent, data: {'title': 'Project', 'breadcrumb': 'Project'} }
+        ] },
+      { path: 'myprojects', data: {'title': 'MyProjects', 'breadcrumb': 'MyProjects'},
+        children: [
+          { path: '', component: ProjectsComponent, data: {'title': 'MyProjects', 'breadcrumb': 'MyProjects'}},
+          { path: 'project', component: ProjectComponent, data: {'title': 'Project', 'breadcrumb': 'Project'}}
+        ] },
+
     ]
   }
 ]);

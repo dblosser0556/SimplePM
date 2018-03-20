@@ -55,7 +55,8 @@
   </div>
   <div *ngIf="selectedProject">
     
-      <app-project-detail [project]="selectedProject" [groupList]="groups" [createTemplate]="isTemplate" [statusList]="status" [pmList]="projectManagers" (projectChange)="updateList($event)"></app-project-detail>
+      <app-project-detail [project]="selectedProject" [groupList]="groups" [createTemplate]="isTemplate" [templateList]="templateList"
+        [statusList]="status" [selectedView]=undefined [pmList]="projectManagers" (projectChange)="updateList($event)"></app-project-detail>
     
     
   </div>

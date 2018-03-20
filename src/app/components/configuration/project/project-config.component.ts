@@ -20,6 +20,7 @@ export class ProjectConfigComponent implements OnInit {
 
   projects: ProjectList[];
   projectList: ProjectList[];
+  templateList: ProjectList[];
   isTemplate = false;
   selectedProject: Project;
   groups: Group[] = [];
@@ -43,6 +44,7 @@ export class ProjectConfigComponent implements OnInit {
     this.getGroupList();
     this.getStatusList();
     this.getPMList();
+    this.getTemplateList();
   }
 
   onDelete(id: number) {
@@ -95,8 +97,17 @@ export class ProjectConfigComponent implements OnInit {
       error => this.errorMsg.changeMessage(error));
   }
 
+  getTemplateList() {
+    const queryParams = { '$filter': 'IsTemplate eq true' };
+    this.projectService.getList(queryParams).subscribe(
+      results => this.templateList = results,
+      error => this.errorMsg.changeMessage(error)
+    );
+  }
+
   add() {
     this.selectedProject = new Project();
+
   }
 
   edit(project: Project) {
@@ -112,6 +123,11 @@ export class ProjectConfigComponent implements OnInit {
   }
 
   showDetails(id: number) {
-    this.router.navigate(['/configuration/project-details'], { queryParams: { projectId: id } });
+    if (this.isTemplate) {
+      this.router.navigate(['/configuration/project-templates/template'], { queryParams: { projectId: id } });
+    } else {
+      this.router.navigate(['/configuration/projects/project'], { queryParams: { projectId: id } });
+    }
+
   }
 }

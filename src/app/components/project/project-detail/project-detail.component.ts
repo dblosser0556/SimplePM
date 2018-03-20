@@ -1,7 +1,7 @@
 
 import { Component, OnInit, Input, OnChanges, Output, EventEmitter, QueryList } from '@angular/core';
-import { ProjectService } from '../../../services';
-import { Project, Status, Group, Role, LoggedInUser, BudgetType, Budget } from '../../../models';
+import { ProjectService, ToastrType } from '../../../services';
+import { Project, Status, Group, Role, LoggedInUser, BudgetType, Budget, ProjectList, FixedPrice, FixedPriceMonth } from '../../../models';
 import { FormBuilder, FormGroup, Validators, FormControl, AbstractControl } from '@angular/forms';
 import { ErrorMsgService } from '../../../services';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
@@ -11,6 +11,7 @@ import { BudgetComponent } from '../../budget/budget.component';
 import { BudgetDetailComponent } from '../../budget/budget-detail/budget-detail.component';
 
 import * as moment from 'moment';
+import { of } from 'rxjs/observable/of';
 
 interface CreateProject {
   isTemplate: boolean;
@@ -35,6 +36,8 @@ export class ProjectDetailComponent implements OnInit, OnChanges {
   @Input() groupList: Group[];
   @Input() pmList: LoggedInUser[];
   @Input() createTemplate: boolean;
+  @Input() templateList: ProjectList[];
+  @Input() selectedView: string;
 
   @Output() projectChange = new EventEmitter<Project>();
 
@@ -90,6 +93,7 @@ export class ProjectDetailComponent implements OnInit, OnChanges {
       actualStartDate: this.project.actualStartDate,
       groupId: this.project.groupId,
       statusId: this.project.statusId,
+      templateId: -1,
       expBudget: this.expBudget,
       capBudget: this.capBudget
     });
@@ -106,7 +110,9 @@ export class ProjectDetailComponent implements OnInit, OnChanges {
     if (project.projectId !== null) {
       this.projectService.update(project.projectId, project).subscribe(data => {
 
+        this.errMsg.showUserMessage(ToastrType.info, 'Success', 'Project Details successfully updated.');
         this.projectChange.emit(project);
+
       },
         error => this.errMsg.changeMessage(error));
     } else {
@@ -124,7 +130,7 @@ export class ProjectDetailComponent implements OnInit, OnChanges {
       this.projectService.create(JSON.stringify(newProject)).subscribe(data => {
         // this.resetForm();
         this.project = data;
-
+        this.errMsg.showUserMessage(ToastrType.info, 'Success', 'Project successfully added.');
         this.projectChange.emit(project);
       },
         error => this.errMsg.changeMessage(error));
@@ -173,11 +179,48 @@ export class ProjectDetailComponent implements OnInit, OnChanges {
       actualStartDate: '',
       groupId: '',
       statusId: '',
+      templateId: '',
       capBudget: [{ value: 0, disabled: true }],
       expBudget: [{ value: 0, disabled: true }]
     }
     );
   }
+
+  removePeriods() {
+    // remove fixed costs
+    this.project.fixedPriceCosts = [];
+    this.project.resources = [];
+    this.project.months = [];
+  }
+
+  selectTemplate(templateId: number) {
+    let template = new Project();
+    // make sure we are on a valid template.
+    if (templateId === -1) {
+      this.errMsg.showUserMessage(ToastrType.show, 'Oops', 'Please select a valid template', false, 2000);
+      return;
+    }
+
+    // get the template data
+    this.projectService.getOne(templateId).subscribe(
+      results => {
+
+        template = results;
+        console.log('template:', template);
+        if (template.months !== undefined) {
+          this.project.months = template.months;
+          this.project.fixedPriceCosts = template.fixedPriceCosts;
+          this.project.resources = template.resources;
+        }
+        console.log('project', this.project);
+
+        this.errMsg.showUserMessage(ToastrType.info, 'Success', 'Successfully Applied Template', false, 2000);
+      },
+      error => this.errMsg.changeMessage(error)
+    );
+
+  }
+
 
 
   revert() { this.ngOnChanges(); }

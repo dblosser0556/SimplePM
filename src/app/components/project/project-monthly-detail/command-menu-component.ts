@@ -1,6 +1,5 @@
 import { Component, OnInit, Input, ElementRef, Renderer2, Output, EventEmitter } from '@angular/core';
-import { CapWeightPercent, Project } from '../../../models';
-
+import { CapWeightPercent, Project, Resource } from '../../../models';
 
 @Component({
     selector: 'app-command-menu',
@@ -42,8 +41,8 @@ export class CommandMenuComponent implements OnInit {
             const cells = el.attributes['id'].nodeValue.split('+');
             if (cells[0] === 'res') {
                 // go through the set of resoruce and months and update to percent
-                this.project.resources.forEach(res => {
-                    res.resourceMonths.forEach(mon => {
+                for (const res of this.project.resources) {
+                    for (const mon of res.resourceMonths) {
                         if (res.resourceId === Number(cells[1]) && mon.resourceMonthId === Number(cells[2])) {
                             if (this.selectedView === 'Forecast') {
                                 // this passes the values is as an array of
@@ -55,8 +54,8 @@ export class CommandMenuComponent implements OnInit {
                                 mon.actualEffortStyle = style[0];
                             }
                         }
-                    });
-                });
+                    }
+                }
 
             } else {
 

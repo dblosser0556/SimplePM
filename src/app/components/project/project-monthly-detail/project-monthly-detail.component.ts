@@ -52,6 +52,10 @@ export class ProjectMonthlyDetailComponent implements OnInit {
   editingIndex = -1;
   editingType: EditingType = EditingType.none;
 
+  newResourceCount = 0;
+  newFixedCostCount = 0;
+  newMonthCount = 0;
+
   @HostListener('window:resize', ['$event'])
   onResize(event) {
     this.calcPageSize(event.target.innerWidth);
@@ -120,7 +124,7 @@ export class ProjectMonthlyDetailComponent implements OnInit {
   }
   // Add months and resources
   addMonth() {
-
+   
     if (this.project.months === null) {
       this.project.months = [];
     }
@@ -130,7 +134,7 @@ export class ProjectMonthlyDetailComponent implements OnInit {
     projectMonth.projectId = this.project.projectId;
     projectMonth.monthNo = 0;
     projectMonth.phaseId = -1;
-    projectMonth.monthId = -1;
+    projectMonth.monthId = this.newMonthCount;
     projectMonth.phaseName = '--Select--';
     projectMonth.totalActualCapital = 0;
     projectMonth.totalActualExpense = 0;
@@ -166,12 +170,12 @@ export class ProjectMonthlyDetailComponent implements OnInit {
     if (this.project.resources === null) {
       this.project.resources = [];
     }
-
+    this.newResourceCount--;
     const resource = new Resource();
     resource.projectId = this.project.projectId,
-      resource.resourceId = this.project.resources.entries.length,
-      resource.resourceName = '',
-      resource.resourceTypeId = -1;
+    resource.resourceId = this.newResourceCount,
+    resource.resourceName = '',
+    resource.resourceTypeId = -1;
     resource.resourceTypeName = 'Please Select';
     resource.roleId = -1;
     resource.roleName = 'Please Select';
@@ -202,7 +206,9 @@ export class ProjectMonthlyDetailComponent implements OnInit {
     }
 
     const resourceMonth = new ResourceMonth();
-    resourceMonth.resourceMonthId = -1;
+    // set the resource to negative to know it is a new month.
+    // use the negative month no to make it unique.
+    resourceMonth.resourceMonthId = -monthNo;
     resourceMonth.resourceId = resource.resourceId;
     resourceMonth.monthNo = monthNo;
     resourceMonth.actualEffort = 0;
@@ -224,10 +230,13 @@ export class ProjectMonthlyDetailComponent implements OnInit {
     }
 
     const fixedPrice = new FixedPrice();
+    // update counter to create unique entry.
+    // this is used in the formatting of
+    this.newFixedCostCount--;
     fixedPrice.projectId = this.project.projectId,
-      fixedPrice.fixedPriceId = -1,
-      fixedPrice.fixedPriceName = '',
-      fixedPrice.resourceTypeId = -1;
+    fixedPrice.fixedPriceId = this.newFixedCostCount,
+    fixedPrice.fixedPriceName = '',
+    fixedPrice.resourceTypeId = -1;
     fixedPrice.resourceTypeName = 'Please Select';
     fixedPrice.fixedPriceTypeId = -1;
     fixedPrice.fixedPriceTypeName = 'Please Select';
@@ -253,8 +262,8 @@ export class ProjectMonthlyDetailComponent implements OnInit {
     }
 
     const fixedPriceMonth = new FixedPriceMonth();
-    fixedPriceMonth.fixedPriceMonthId = -1;
-    fixedPriceMonth.fixedPriceId = -1;
+    fixedPriceMonth.fixedPriceMonthId = -monthNo;
+    fixedPriceMonth.fixedPriceId = projectFixedPrice.fixedPriceId;
     fixedPriceMonth.monthNo = monthNo;
     fixedPriceMonth.actualCost = 0;
     fixedPriceMonth.actualCostCapPercent = 1;
@@ -499,7 +508,7 @@ export class ProjectMonthlyDetailComponent implements OnInit {
 
   updateAllMonthlyTotals() {
     this.project.months.forEach(month => {
-      this.updateMonthlyTotals(month.monthNo - 1);
+      this.updateMonthlyTotals(month.monthNo);
     });
   }
   // consider refactoring to be only for the current month.
