@@ -12,7 +12,7 @@ export class ProjectCardComponent implements OnInit, AfterViewInit {
 
   @Input() projectSummary: ProjectList;
   @Input() allowEdit: boolean;
-
+ 
   project: Project;
   view = 'summary';
 

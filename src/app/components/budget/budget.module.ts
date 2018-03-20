@@ -7,18 +7,21 @@ import { BudgetComponent } from './budget.component';
 import { BudgetService } from '../../services';
 import { BudgetDetailComponent } from './budget-detail/budget-detail.component';
 import { AppBootstrapModule } from '../../appbootstrapmodule';
+import { BudgetFilterPipe } from '../../filter/budget.filter';
 
 @NgModule({
     imports:      [CommonModule, FormsModule, ReactiveFormsModule,  BrowserAnimationsModule, NgxChartsModule, AppBootstrapModule ],
     declarations: [
         BudgetComponent,
         BudgetDetailComponent,
+        BudgetFilterPipe
     ],
-    entryComponents: [BudgetComponent, 
+    entryComponents: [BudgetComponent,
         BudgetDetailComponent],
     exports:      [
      BudgetComponent,
-     BudgetDetailComponent
+     BudgetDetailComponent,
+     BudgetFilterPipe
     ],
         providers:    [BudgetService]
   })

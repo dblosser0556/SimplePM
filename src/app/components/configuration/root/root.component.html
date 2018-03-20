@@ -63,9 +63,6 @@
     <!--class="col-sm-9 ml-sm-auto col-md-10 pt-3" -->
     <h4>{{pageTitle}}</h4>
     <router-outlet></router-outlet>
-    <alert *ngIf="!isOpen" type="danger" dismissible="true" dismissOnTimeout="5000" (onClosed)="isOpen = false">
-      <strong>Oops:&nbsp;</strong>{{errorMsg}}
-    </alert>
   </main>
 
 </div>

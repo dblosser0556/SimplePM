@@ -29,7 +29,6 @@ export class ProjectService extends
             for (const key of keys) {
                 requestOptions.params.append(key, params[key]);
             }
-           
         }
 
         return this._http.get(this.actionUrl, requestOptions)

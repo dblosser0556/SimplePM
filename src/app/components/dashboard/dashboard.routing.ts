@@ -13,7 +13,7 @@ import { AuthGuard } from '../../guard/auth.guard';
 export const routing: ModuleWithProviders = RouterModule.forChild([
   {
     path: 'dashboard',
-    component: RootComponent, canActivate: [AuthGuard], data: {'title': 'dashboard', 'breadcrumb': 'dashboard'},
+    component: RootComponent, canActivate: [AuthGuard], data: {'title': 'Dashboard', 'breadcrumb': 'Dashboard'},
 
     children: [
       { path: '', component: HomeComponent, data: {'title': 'Home', 'breadcrumb': 'Home'} },

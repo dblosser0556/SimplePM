@@ -1,7 +1,9 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Budget } from '../../models';
-import { BudgetService } from '../../services';
-import { BsModalRef } from 'ngx-bootstrap/modal';
+import { Budget, BudgetType } from '../../models';
+import { BudgetService, ErrorMsgService, ToastrType } from '../../services';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { BudgetDetailComponent } from './budget-detail/budget-detail.component';
+import { Subject } from 'rxjs/Subject';
 
 @Component({
   selector: 'app-budget',
@@ -13,19 +15,33 @@ export class BudgetComponent implements OnInit {
   groupId: number;
   projectId: number;
   title: string;
+  isCapital: boolean;
+  onClose: Subject<Budget[]>;
 
+  budgetDetailsModal: BsModalRef;
   selectedBudget: Budget;
   error: any;
   isLoading = false;
+  budgetType: BudgetType;
   
 
   constructor(private budgetService: BudgetService,
-    public bsModalRef: BsModalRef
+    public bsModalRef: BsModalRef,
+    private bsModalService: BsModalService,
+    private errMsgService: ErrorMsgService
     ) {
   }
 
   ngOnInit() {
-      //this.getList();
+    this.onClose = new Subject<Budget[]>();
+    if (this.isCapital) {
+        this.budgetType = BudgetType.Capital;
+        this.title += ' - Capital Budget';
+    } else {
+        this.title += ' - Expense Budget';
+        this.budgetType = BudgetType.Expense;
+    }
+    
   }
 
 
@@ -35,36 +51,63 @@ export class BudgetComponent implements OnInit {
       if (confirm('Are you sure to delete this record?') === true) {
           this.budgetService.delete(id)
               .subscribe(x => {
-                //  this.snackBar.open('Budget has been deleted', '', {duration: 2000});
-                  this.getList();
+                this.errMsgService.showUserMessage(ToastrType.success, 'Success', 'Budget record has been deleted');
+                  this.getList(this.projectId, this.isCapital);
               });
       }
   }
 
-  getList() {
+  getList(projectId: number, isCapital: boolean) {
       this.isLoading = true;
-      this.budgetService.getAll()
+      const queryParams = {'$filter': 'ProjectId eq ' + projectId };
+      this.budgetService.getList(queryParams)
           .subscribe(results => {
               this.budgets = results;
               this.isLoading = false;
           },
-          error => this.error = error);
+          error => this.errMsgService.changeMessage(error));
       this.selectedBudget = undefined;
   }
 
-  add() {
-      this.selectedBudget = new Budget();
-      
-      this.selectedBudget.groupId = this.groupId;
-      this.selectedBudget.projectId = this.projectId;
+  addBudget(isCapital: boolean) {
+    const _budget = new Budget();
+    _budget.budgetId = null;
+    _budget.projectId = this.projectId;
+    _budget.budgetType = (isCapital) ? BudgetType.Capital : BudgetType.Expense;
+    const initialState = {
+      budget: _budget
+    };
+    this.budgetDetailsModal = this.bsModalService.show(BudgetDetailComponent, { initialState });
+    this.budgetDetailsModal.content.onClose.subscribe(result => {
+      console.log('results', result);
+      if (result !== null) {
+        this.getList(this.projectId, this.isCapital);
+    }
+    });
   }
-
   edit(budget: Budget) {
       this.selectedBudget = budget;
+      const initialState = {
+        budget: this.selectedBudget
+      };
+      this.budgetDetailsModal = this.bsModalService.show(BudgetDetailComponent, { initialState });
+      this.budgetDetailsModal.content.budget = this.selectedBudget;
+      this.budgetDetailsModal.content.onClose.subscribe(result => {
+        console.log('results', result);
+        if (result !== null) {
+            this.getList(this.projectId, this.isCapital);
+        }
+      });
   }
 
   updateList(event: any) {
-      this.getList();
+      this.getList(this.projectId, this.isCapital);
+  }
+
+  close() {
+      this.onClose.next(this.budgets);
+      this.bsModalRef.hide();
+
   }
 
 

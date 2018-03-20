@@ -8,7 +8,6 @@
   <form (ngSubmit)="onSubmit()" name="budgetForm" class="budget-form" [formGroup]="budgetForm" novalidate>
     <input readonly hidden formControlName="budgetId">
     <input readonly hidden formControlName="projectId">
-    <input readonly hidden formControlName="groupId">
     <div class="w-100 p-3 form-group">
       <label class="center-block">Approval Date:</label>
       <input type="text" class="form-control" bsDatepicker [bsConfig]="bsConfig" formControlName="approvedDateTime" required>

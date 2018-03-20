@@ -27,7 +27,7 @@ export class ErrorMsgService {
     _timeOut?: number, _closeButton?: boolean) {
     const config  = {
       disableTimeOut: (_disableTimeOut) ? _disableTimeOut : false,
-      timeOut: (_timeOut) ? _timeOut : 5000,
+      timeOut: (_timeOut) ? _timeOut : 3000,
       closeButton: (_closeButton) ? _closeButton : false,
       positionClass: 'toast-top-right'
     };

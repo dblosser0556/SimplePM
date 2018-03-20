@@ -18,7 +18,6 @@ export class RootComponent implements OnInit, OnDestroy {
   isOpen = false;
 
   constructor(private config: ConfigService,
-      private errMessageService: ErrorMsgService,
       private router: Router,
       private activatedRoute: ActivatedRoute) {
         this.isOpen = false;
@@ -29,12 +28,7 @@ export class RootComponent implements OnInit, OnDestroy {
 
     this.subSideBarActiveStatus = this.config.sidebarActiveStatus$.subscribe(
       active => this.active = active);
-    this.subErrors = this.errMessageService.currentMessage.subscribe(
-      message => {
-        this.errMessageService.showUserMessage(ToastrType.warning, 'Oops', message);
-        console.log(this.errorMsg);
-      });
-
+   
       this.router.events
       .filter((event) => event instanceof NavigationEnd)
       .map(() => this.activatedRoute)
@@ -53,7 +47,6 @@ export class RootComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.subSideBarActiveStatus.unsubscribe();
-    this.subErrors.unsubscribe();
   }
 
 

@@ -9,7 +9,7 @@ export class Budget {
     approvedDateTime: string;
     amount: number;
     projectId: number;
-    groupId: number;
+
 
 
     constructor(private instanceData?: Budget) {

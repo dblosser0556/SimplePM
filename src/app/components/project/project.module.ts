@@ -17,18 +17,20 @@ import { ProjectChartComponent } from './project-chart/project-chart.component';
 
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { ModalModule } from 'ngx-bootstrap/modal';
 
 import { ProjectService} from '../../services';
 
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { ProjectCardMonthlySummaryComponent } from './project-card-monthly-summary/project-card-monthly-summary.component';
+import { ProjectCardModalComponent } from './project-card-modal/project-card-modal.component';
 
 
 
 @NgModule({
   imports:      [CommonModule, FormsModule, ReactiveFormsModule, BsDropdownModule,
-    BsDatepickerModule, TabsModule, TooltipModule, SharedModule, BrowserAnimationsModule, NgxChartsModule ],
+    BsDatepickerModule, TabsModule, TooltipModule, SharedModule, BrowserAnimationsModule, NgxChartsModule, ModalModule ],
   declarations: [
     ProjectComponent,
     ProjectDetailComponent,
@@ -37,7 +39,10 @@ import { ProjectCardMonthlySummaryComponent } from './project-card-monthly-summa
     ProjectCardSummaryComponent,
     ProjectChartComponent,
     CommandMenuComponent,
-    ProjectCardMonthlySummaryComponent],
+    ProjectCardMonthlySummaryComponent,
+    ProjectCardModalComponent],
+    entryComponents: [ProjectCardModalComponent,
+      ProjectChartComponent],
   exports:      [
     ProjectComponent,
     ProjectDetailComponent,
@@ -45,6 +50,7 @@ import { ProjectCardMonthlySummaryComponent } from './project-card-monthly-summa
     ProjectCardComponent,
     ProjectCardSummaryComponent,
     ProjectChartComponent,
+    ProjectCardModalComponent
   ],
       providers:    [ProjectService]
 })

@@ -1,5 +1,5 @@
 
-import { Component, OnInit, Input, OnChanges, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, Output, EventEmitter, QueryList } from '@angular/core';
 import { ProjectService } from '../../../services';
 import { Project, Status, Group, Role, LoggedInUser, BudgetType, Budget } from '../../../models';
 import { FormBuilder, FormGroup, Validators, FormControl, AbstractControl } from '@angular/forms';
@@ -42,12 +42,12 @@ export class ProjectDetailComponent implements OnInit, OnChanges {
   expBudget: number;
 
 
-
   projectForm: FormGroup;
   error: any;
   colorTheme = 'theme-blue';
   bsConfig: Partial<BsDatepickerConfig>;
-  public modalRef: BsModalRef;
+  public budgetListModal: BsModalRef;
+  public budgetDetailModal: BsModalRef;
 
   constructor(private projectService: ProjectService,
     private fb: FormBuilder,
@@ -187,19 +187,21 @@ export class ProjectDetailComponent implements OnInit, OnChanges {
   showBudget(isCapital: boolean) {
     let _budgets = new Array<Budget>();
     if (this.project.budgets !== undefined) {
-      _budgets = this.project.budgets.filter(b => b.budgetType === ((isCapital) ? BudgetType.Capital : BudgetType.Expense));
+      _budgets = this.project.budgets;
     }
 
     const initialState = {
       budgets: _budgets,
-      groupId: 0,
       projectId: this.project.projectId,
-      title: this.project.projectName
+      title: this.project.projectName,
+      isCapital: isCapital
     };
 
-    this.modalRef = this.modalService.show(BudgetComponent, { initialState });
-    this.modalRef.content.onClose.subscribe(result => {
+    this.budgetListModal = this.modalService.show(BudgetComponent, { initialState });
+    this.budgetListModal.content.onClose.subscribe(result => {
       console.log('results', result);
+      this.project.budgets = result;
+      this.ngOnChanges();
     });
   }
 
@@ -207,14 +209,15 @@ export class ProjectDetailComponent implements OnInit, OnChanges {
     const _budget = new Budget();
     _budget.budgetId = null;
     _budget.projectId = this.project.projectId;
-    _budget.groupId = null;
     _budget.budgetType = (isCapital) ? BudgetType.Capital : BudgetType.Expense;
     const initialState = {
       budget: _budget
     };
-    this.modalRef = this.modalService.show(BudgetDetailComponent, { initialState });
-    this.modalRef.content.onClose.subscribe(result => {
+    this.budgetDetailModal = this.modalService.show(BudgetDetailComponent, { initialState });
+    this.budgetDetailModal.content.onClose.subscribe(result => {
       console.log('results', result);
+      this.project.budgets.push(result);
+      this.ngOnChanges();
     });
   }
 }

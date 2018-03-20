@@ -20,7 +20,7 @@ import {
     export const routing: ModuleWithProviders = RouterModule.forChild([
         {
           path: 'configuration',
-          component: RootComponent, data: {'title': 'root', 'breadcrumb': 'root'},
+          component: RootComponent, data: {'title': 'root', 'breadcrumb': 'Configuration'},
 
           children: [
             { path: '', component: ProjectConfigComponent, data: {'title': 'Projects', 'breadcrumb': 'Projects'}  },

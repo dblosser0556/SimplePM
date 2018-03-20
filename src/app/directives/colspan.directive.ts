@@ -3,7 +3,7 @@ import { Directive, ElementRef, Renderer, OnInit, Input, HostListener } from '@a
 @Directive({
   selector: '[appColspan]'
 })
-export class ColspanDirective implements OnInit{
+export class ColspanDirective implements OnInit {
   _colSpanCount: string;
 
   @Input('appColspan') colSpanCount: string;
@@ -15,8 +15,8 @@ export class ColspanDirective implements OnInit{
       this.renderer.setElementAttribute(this.el.nativeElement, 'colspan', _colSpan);
       this._colSpanCount = this.colSpanCount;
     }
-    
-  } 
+
+  }
   constructor(private el: ElementRef, private renderer: Renderer) {}
 
 
@@ -24,8 +24,8 @@ export class ColspanDirective implements OnInit{
       const _colSpan = (Number(this.colSpanCount) - 1).toString();
       this.renderer.setElementAttribute(this.el.nativeElement, 'colspan', _colSpan);
       this._colSpanCount = this.colSpanCount;
-    }    
+    }
 
 
-   
+
 }

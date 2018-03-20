@@ -2,6 +2,9 @@
   <table class="table table-sm">
     <thead>
       <tr>
+          <th>
+              Month
+            </th>
         <th colspan="2">
           Expense
         </th>
@@ -28,27 +31,27 @@
     <tfoot>
 
       <tr>
-        <td>Total</td>
-        <td>Exp Budget:</td>
-        <td>{{projectSummary.totalExpenseBudget | currency:'USD':'symbol-narrow':'0.0-0'}}</td>
-        <td>Cap Budget:</td>
-        <td>{{projectSummary.totalCapitalBudget | currency:'USD':'symbol-narrow':'0.0-0'}}</td>
+        <th>Total</th>
+        <th>Exp Budget:</th>
+        <th>{{projectSummary.totalExpenseBudget | currency:'USD':'symbol-narrow':'0.0-0'}}</th>
+        <th>Cap Budget:</th>
+        <th>{{projectSummary.totalCapitalBudget | currency:'USD':'symbol-narrow':'0.0-0'}}</th>
       </tr>
       <tr>
-        <td>Total</td>
-        <td>{{projectSummary.totalPlannedExpense | currency:'USD':'symbol-narrow':'0.0-0'}} </td>
-        <td>{{projectSummary.totalActualExpense | currency:'USD':'symbol-narrow':'0.0-0'}}</td>
+        <th>Total</th>
+        <th>{{projectSummary.totalPlannedExpense | currency:'USD':'symbol-narrow':'0.0-0'}} </th>
+        <th>{{projectSummary.totalActualExpense | currency:'USD':'symbol-narrow':'0.0-0'}}</th>
 
-        <td>{{projectSummary.totalPlannedCapital | currency:'USD':'symbol-narrow':'0.0-0'}}</td>
-        <td>{{projectSummary.totalActualCapital | currency:'USD':'symbol-narrow':'0.0-0'}}</td>
+        <th>{{projectSummary.totalPlannedCapital | currency:'USD':'symbol-narrow':'0.0-0'}}</th>
+        <th>{{projectSummary.totalActualCapital | currency:'USD':'symbol-narrow':'0.0-0'}}</th>
       </tr>
       <tr>
-        <td>Diff</td>
-        <td>{{projectSummary.totalExpenseBudget - projectSummary.totalPlannedExpense | currency:'USD':'symbol-narrow':'0.0-0'}}</td>
-        <td>{{projectSummary.totalExpenseBudget - projectSummary.totalActualExpense | currency:'USD':'symbol-narrow':'0.0-0'}}</td>
+        <th>Diff</th>
+        <th>{{projectSummary.totalExpenseBudget - projectSummary.totalPlannedExpense | currency:'USD':'symbol-narrow':'0.0-0'}}</th>
+        <th>{{projectSummary.totalExpenseBudget - projectSummary.totalActualExpense | currency:'USD':'symbol-narrow':'0.0-0'}}</th>
 
-        <td>{{projectSummary.totalCapitalBudget - projectSummary.totalPlannedCapital | currency:'USD':'symbol-narrow':'0.0-0'}}</td>
-        <td>{{projectSummary.totalCapitalBudget - projectSummary.totalActualCapital | currency:'USD':'symbol-narrow':'0.0-0'}}</td>
+        <th>{{projectSummary.totalCapitalBudget - projectSummary.totalPlannedCapital | currency:'USD':'symbol-narrow':'0.0-0'}}</th>
+        <th>{{projectSummary.totalCapitalBudget - projectSummary.totalActualCapital | currency:'USD':'symbol-narrow':'0.0-0'}}</th>
       </tr>
 
 

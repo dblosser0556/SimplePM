@@ -1,7 +1,8 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ElementRef } from '@angular/core';
 import { Project } from '../../../models';
 import * as moment from 'moment';
-
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { ProjectCardModalComponent } from '../project-card-modal/project-card-modal.component';
 
 export interface SeriesData {
   name: string;
@@ -20,11 +21,14 @@ export interface ChartData {
 })
 export class ProjectChartComponent implements OnInit {
   @Input() project: Project;
-  single: any[];
-  multi: any[];
+  @Input() enableModal: boolean;
+
+  title: string;
   data: ChartData[] = [];
 
-  view: any[] = [500, 400];
+  // view: any[] = [500, 400];
+  view: any[] = [];
+
   // options
   showXAxis = true;
   showYAxis = true;
@@ -36,25 +40,41 @@ export class ProjectChartComponent implements OnInit {
   yAxisLabel = 'Dollars';
 
   colorScheme = {
-    domain: ['#5AA454', '#A10A28', '#C7B42C', '#AAAAAA', '#CCCCCC', '#0756E4']
+    domain: ['#5AA454', '#A10A28', '#C7B42C', '#AAAAAA', '#CCCCCC', '#0756E4', '#987645', '#FF34589']
   };
 
+  chartModal: BsModalRef;
   // line, area
   autoScale = true;
-  constructor() {
+
+  constructor(private bsModalService: BsModalService,
+    private el: ElementRef) {
 
   }
 
 
   ngOnInit() {
     this.convertData();
+
+    const height = this.el.nativeElement.parentElement.clientHeight;
+    const width = this.el.nativeElement.parentElement.clientWidth;
+     console.log('height: ', height, ' width: ', width);
+    this.view = [width, height];
+    this.title = this.project.projectName;
   }
 
 
-  onSelect(event) {
-    console.log(event);
-  }
+/*   onSelect(event) {
+    if (this.enableModal) {
+      const initialState = {
+        title: this.project.projectName,
+        data: this.data
+      };
+      this.chartModal = this.bsModalService.show(ProjectCardModalComponent, { initialState });
+    }
+  } */
 
+  // convert the monthly data to an array of cummulative data
   convertData() {
     const plannedCapitalSeries = new Array();
     const actualCapitalSeries = new Array();
@@ -63,14 +83,19 @@ export class ProjectChartComponent implements OnInit {
     const actualExpenseSeries = new Array();
     const expenseBudgetSeries = new Array();
 
+
+
     const plannedStartDate = moment(this.project.startDate());
     let cumPlannedCap = 0;
     let cumActualCap = 0;
     let cumPlannedExp = 0;
     let cumActualExp = 0;
 
+    let countActualCapMonths = 0;
+    let countActualExpMonths = 0;
+
     for (const month of this.project.months) {
-        
+
         const monthName = plannedStartDate.month(month.monthNo).format('YYYY-MM');
         cumPlannedCap += month.totalPlannedCapital;
         let rowData: SeriesData = {
@@ -80,11 +105,16 @@ export class ProjectChartComponent implements OnInit {
         plannedCapitalSeries.push(rowData);
 
         cumActualCap += month.totalActualCapital;
+
         rowData = {
           name: monthName,
           value: cumActualCap
         };
         actualCapitalSeries.push(rowData);
+        if (month.totalActualCapital > 0 ) {
+          countActualCapMonths = actualCapitalSeries.length;
+        }
+
 
         rowData = {
           name: monthName,
@@ -105,7 +135,9 @@ export class ProjectChartComponent implements OnInit {
           value: cumActualExp
         };
         actualExpenseSeries.push(rowData);
-
+        if (month.totalActualExpense > 0 ) {
+          countActualExpMonths = actualExpenseSeries.length;
+        }
         rowData = {
           name: monthName,
           value: 100000
@@ -149,6 +181,50 @@ export class ProjectChartComponent implements OnInit {
       name: 'Expense Budget',
       series: expenseBudgetSeries
     };
+    this.data.push(chartData);
+
+     // estimated at completion (EAC) uses all of the actual months
+    // then continues with the planned months.
+    const capEAC = new Array();
+    const expEAC = new Array();
+
+    let cumCapEAC = 0;
+    let cumExpEAC = 0;
+
+    const lastActualMonth = (countActualExpMonths >= countActualCapMonths) ? countActualExpMonths : countActualCapMonths;
+    for (let i = 0; i < lastActualMonth; i++) {
+      capEAC.push(actualCapitalSeries[i]);
+      expEAC.push(actualExpenseSeries[i]);
+    }
+    cumCapEAC = actualCapitalSeries[lastActualMonth].value;
+    cumExpEAC = actualExpenseSeries[lastActualMonth].value;
+
+    for (let i = lastActualMonth; i < this.project.months.length; i++) {
+        cumCapEAC += this.project.months[i].totalPlannedCapital;
+        let rowData: SeriesData = {
+          name: actualCapitalSeries[i].name,
+          value: cumCapEAC
+        };
+        capEAC.push(rowData);
+
+        cumExpEAC += this.project.months[i].totalPlannedExpense;
+        rowData = {
+          name: actualExpenseSeries[i].name,
+          value: cumExpEAC
+        };
+        expEAC.push(rowData);
+    }
+    chartData = {
+      name: 'Exp EAC',
+      series: expEAC
+    };
+    this.data.push(chartData);
+
+    chartData = {
+      name: 'Cap EAC',
+      series: capEAC
+    };
+
     this.data.push(chartData);
 
     console.log(this.data);
