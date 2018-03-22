@@ -4,7 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from '../../modules/shared.module';
 import { ProjectModule } from '../project/project.module';
 import { BudgetModule } from '../budget/budget.module';
-
+import { GroupBudgetModule } from '../group-budget/group-budget.module';
 import { routing } from './configuration.routing';
 
 /* import { AlertModule } from 'ngx-bootstrap/alert';
@@ -52,7 +52,8 @@ import {
     ReactiveFormsModule,
     AppBootstrapModule,
     ProjectModule,
-    BudgetModule
+    BudgetModule,
+    GroupBudgetModule
   ],
   declarations: [
     RootComponent,

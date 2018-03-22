@@ -52,8 +52,7 @@ export class UserService {
         this.authorityToken = tok.auth_token;
         console.log('token', this.authorityToken);
 
-        this.loggedIn = true;
-        this._authNavStatusSource.next(true);
+       
         return true;
       })
       .catch(x => this.handleAuthError(x));
@@ -71,6 +70,8 @@ export class UserService {
         _loggedInUser = res;
 
         this.loggedInUser = _loggedInUser;
+        this.loggedIn = true;
+        this._authNavStatusSource.next(true);
         return _loggedInUser;
       })
       .catch(x => this.handleAuthError(x));
@@ -126,6 +127,10 @@ export class UserService {
 
   isLoggedIn() {
     return this.loggedIn;
+  }
+
+  currentUser(): LoggedInUser {
+    return this.loggedInUser;
   }
 
 

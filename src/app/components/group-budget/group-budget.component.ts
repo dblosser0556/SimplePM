@@ -1,31 +1,30 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { Budget, BudgetType } from '../../models';
-import { BudgetService, ErrorMsgService, ToastrType } from '../../services';
-import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { BudgetDetailComponent } from './budget-detail/budget-detail.component';
+import { Component, OnInit } from '@angular/core';
+import { GroupBudget, BudgetType } from '../../models';
 import { Subject } from 'rxjs/Subject';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { GroupBudgetService, ErrorMsgService, ToastrType } from '../../services';
+import { GroupBudgetDetailComponent } from './group-budget-detail/group-budget-detail.component';
 
 @Component({
-  selector: 'app-budget',
-  templateUrl: './budget.component.html',
-  styleUrls: ['./budget.component.scss']
+  selector: 'app-group-budget',
+  templateUrl: './group-budget.component.html',
+  styleUrls: ['./group-budget.component.css']
 })
-export class BudgetComponent implements OnInit {
-  budgets: Budget[];
+export class GroupBudgetComponent implements OnInit {
+
+  budgets: GroupBudget[];
   groupId: number;
-  projectId: number;
   title: string;
   isCapital: boolean;
-  onClose: Subject<Budget[]>;
+  onClose: Subject<GroupBudget[]>;
 
   budgetDetailsModal: BsModalRef;
-  selectedBudget: Budget;
-  error: any;
+  selectedBudget: GroupBudget;
   isLoading = false;
   budgetType: BudgetType;
-  
 
-  constructor(private budgetService: BudgetService,
+
+  constructor(private budgetService: GroupBudgetService,
     public bsModalRef: BsModalRef,
     private bsModalService: BsModalService,
     private errMsgService: ErrorMsgService
@@ -33,7 +32,7 @@ export class BudgetComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.onClose = new Subject<Budget[]>();
+    this.onClose = new Subject<GroupBudget[]>();
     if (this.isCapital) {
         this.budgetType = BudgetType.Capital;
         this.title += ' - Capital Budget';
@@ -41,6 +40,7 @@ export class BudgetComponent implements OnInit {
         this.title += ' - Expense Budget';
         this.budgetType = BudgetType.Expense;
     }
+
   }
 
 
@@ -51,7 +51,7 @@ export class BudgetComponent implements OnInit {
           this.budgetService.delete(id)
               .subscribe(x => {
                 this.errMsgService.showUserMessage(ToastrType.success, 'Success', 'Budget record has been deleted');
-                  this.getList(this.projectId, this.isCapital);
+                  this.getList(this.groupId, this.isCapital);
               });
       }
   }
@@ -69,38 +69,38 @@ export class BudgetComponent implements OnInit {
   }
 
   addBudget(isCapital: boolean) {
-    const _budget = new Budget();
-    _budget.budgetId = null;
-    _budget.projectId = this.projectId;
+    const _budget = new GroupBudget();
+    _budget.groupBudgetId = null;
+    _budget.groupId = this.groupId;
     _budget.budgetType = (isCapital) ? BudgetType.Capital : BudgetType.Expense;
     const initialState = {
       budget: _budget
     };
-    this.budgetDetailsModal = this.bsModalService.show(BudgetDetailComponent, { initialState });
+    this.budgetDetailsModal = this.bsModalService.show(GroupBudgetDetailComponent, { initialState });
     this.budgetDetailsModal.content.onClose.subscribe(result => {
       console.log('results', result);
       if (result !== null) {
-        this.getList(this.projectId, this.isCapital);
+        this.getList(this.groupId, this.isCapital);
     }
     });
   }
-  edit(budget: Budget) {
+  edit(budget: GroupBudget) {
       this.selectedBudget = budget;
       const initialState = {
         budget: this.selectedBudget
       };
-      this.budgetDetailsModal = this.bsModalService.show(BudgetDetailComponent, { initialState });
+      this.budgetDetailsModal = this.bsModalService.show(GroupBudgetDetailComponent, { initialState });
       this.budgetDetailsModal.content.budget = this.selectedBudget;
       this.budgetDetailsModal.content.onClose.subscribe(result => {
         console.log('results', result);
         if (result !== null) {
-            this.getList(this.projectId, this.isCapital);
+            this.getList(this.groupId, this.isCapital);
         }
       });
   }
 
   updateList(event: any) {
-      this.getList(this.projectId, this.isCapital);
+      this.getList(this.groupId, this.isCapital);
   }
 
   close() {

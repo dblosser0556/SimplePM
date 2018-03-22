@@ -1,0 +1,48 @@
+<div class="modal-header">
+    <div class="modal-title pull-left">
+      {{title}}
+    </div>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="cancel()"><span aria-hidden="true">&times;</span></button>
+  </div>
+  <div class="modal-body">
+    <form (ngSubmit)="onSubmit()" name="budgetForm" class="budget-form" [formGroup]="budgetForm" novalidate>
+      <input readonly hidden formControlName="groupBudgetId">
+      <input readonly hidden formControlName="groupId">
+      <div class="w-100 p-3 form-group">
+        <label class="center-block">Approval Date:</label>
+        <input type="text" class="form-control" bsDatepicker [bsConfig]="bsConfig" formControlName="approvedDateTime" required>
+        <div align="start" *ngIf="budgetForm.controls.approvedDateTime.errors && !budgetForm.controls.approvedDateTime.pristine">
+          <div class="invalid-input">
+            Date is required!
+          </div>
+        </div>
+      </div>
+      <div class="w-100 p-3 form-group">
+          <label class="center-block">Budget Year:</label>
+          <input type="text" class="form-control" formControlName="budgetYear" required>
+          <div align="start" *ngIf="budgetForm.controls.budgetYear.errors && !budgetForm.controls.budgetYear.pristine">
+            <div class="invalid-input">
+              Budget Year is required!
+            </div>
+          </div>
+        </div>
+      <div class="w-100 p-3 form-group">
+        <label class="center-block">Amount:</label>
+        <input class="form-control" formControlName="amount" required>
+        <div align="start" *ngIf="budgetForm.controls.amount.errors && !budgetForm.controls.amount.pristine">
+          <div class="invalid-input">
+            Amount is required!
+          </div>
+        </div>
+      </div>
+  
+      <div class="form-group-row">
+        <button class="btn btn-primary" type="submit" [disabled]="!budgetForm.valid">
+          <i class="fas fa-save"></i>Save</button>
+        <button type="button" class="btn btn-warning" (click)="revert()">
+          <i class="fas fa-window-restore"></i>Reset</button>
+        <button type="button" class="btn btn-warning" (click)="cancel()">
+          <i class="fas fa-ban"></i>Cancel</button>
+      </div>
+    </form>
+  </div>

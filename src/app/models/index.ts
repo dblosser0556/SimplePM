@@ -15,6 +15,8 @@ export * from './cap-weight-percent';
 export * from './project';
 export * from './projectlist.interface';
 export * from './group';
+export * from './group-budget';
+
 export * from './resource';
 export * from './month';
 export * from './resource-month';

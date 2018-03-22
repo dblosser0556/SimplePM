@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ElementRef } from '@angular/core';
+import { Component, OnInit, Input, ElementRef, HostListener } from '@angular/core';
 import { Project } from '../../../models';
 import * as moment from 'moment';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
@@ -27,7 +27,7 @@ export class ProjectChartComponent implements OnInit {
   data: ChartData[] = [];
 
   // view: any[] = [500, 400];
-  view: any[] = [];
+  view: any[] = [370, 275];
 
   // options
   showXAxis = true;
@@ -52,27 +52,17 @@ export class ProjectChartComponent implements OnInit {
 
   }
 
-
+  
   ngOnInit() {
     this.convertData();
 
     const height = this.el.nativeElement.parentElement.clientHeight;
     const width = this.el.nativeElement.parentElement.clientWidth;
      console.log('height: ', height, ' width: ', width);
-    this.view = [width, height];
+   // this.view = [width, height];
     this.title = this.project.projectName;
   }
 
-
-/*   onSelect(event) {
-    if (this.enableModal) {
-      const initialState = {
-        title: this.project.projectName,
-        data: this.data
-      };
-      this.chartModal = this.bsModalService.show(ProjectCardModalComponent, { initialState });
-    }
-  } */
 
   // convert the monthly data to an array of cummulative data
   convertData() {

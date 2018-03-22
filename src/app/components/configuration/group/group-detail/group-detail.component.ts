@@ -1,9 +1,13 @@
-import { Component, OnInit, Input, OnChanges, Output, EventEmitter  } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, Output, EventEmitter } from '@angular/core';
 import { GroupService } from './../group.service';
-import { Group, LoggedInUser } from '../../../../models';
+import { Group, LoggedInUser, GroupBudget, BudgetType } from '../../../../models';
 import { FormBuilder, FormGroup, Validators, FormControl, AbstractControl } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
 import { ErrorMsgService } from '../../../../services';
+import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
+import { GroupBudgetComponent } from '../../../group-budget/group-budget.component';
+import { GroupBudgetDetailComponent } from '../../../group-budget/group-budget-detail/group-budget-detail.component';
+import * as moment from 'moment';
 
 interface CreateGroup {
   groupName: string;
@@ -23,108 +27,177 @@ interface CreateGroup {
 })
 export class GroupDetailComponent implements OnInit, OnChanges {
 
- 
-  @Input() item: Group;
+
+  @Input() group: Group;
   @Input() pmList: LoggedInUser[];
   @Input() groupOptions: Group[];
-  @Output() itemChange = new EventEmitter<Group>();
+  @Output() groupChange = new EventEmitter<Group>();
 
-  itemForm: FormGroup;
+  public budgetListModal: BsModalRef;
+  public budgetDetailModal: BsModalRef;
+
+  expBudget: number;
+  capBudget: number;
+
+  currentYear: number;
+  groupForm: FormGroup;
   error: any;
 
-  constructor(private itemService: GroupService,
+  constructor(private groupService: GroupService,
     private fb: FormBuilder,
-    private errors: ErrorMsgService) {
-      this.createForm();
-     }
+    private errors: ErrorMsgService,
+    private modalService: BsModalService) {
+    this.createForm();
+  }
 
-  ngOnInit() {}
+  ngOnInit() {
+
+  }
 
   ngOnChanges() {
-    if (this.item.level === undefined) {
-      this.item.level = 0;
+    this.currentYear = moment().year();
+    this.expBudget = 0;
+    this.capBudget = 0;
+    if (this.group.groupBudgets !== undefined) {
+      for (const budget of this.group.groupBudgets) {
+        if (budget.budgetYear === this.currentYear) {
+          if (budget.budgetType === BudgetType.Capital) {
+
+            this.capBudget += budget.amount;
+          } else {
+            this.expBudget += budget.amount;
+          }
+        }
+      }
     }
-    this.itemForm.reset( {
-      itemId: this.item.groupId,
-      itemName: this.item.groupName,
-      itemDesc: this.item.groupDesc,
-      itemManager: this.item.groupManager,
-      parentId: this.item.parentId,
-      levelDesc: this.item.levelDesc,
-      level: this.item.level} );
+    if (this.group.level === undefined) {
+      this.group.level = 0;
+    }
+    this.groupForm.reset({
+      groupId: this.group.groupId,
+      groupName: this.group.groupName,
+      groupDesc: this.group.groupDesc,
+      groupManager: this.group.groupManager,
+      parentId: this.group.parentId,
+      levelDesc: this.group.levelDesc,
+      level: this.group.level,
+      capBudget: this.capBudget,
+      expBudget: this.expBudget
+    });
   }
 
   onSubmit() {
-    this.itemForm.updateValueAndValidity();
-    if (this.itemForm.invalid) {
+    this.groupForm.updateValueAndValidity();
+    if (this.groupForm.invalid) {
       return;
     }
 
-    const item: Group = this.getGroupFromFormValue(this.itemForm.value);
-    if (item.groupId !== null && item.groupId !== undefined) {
-      this.itemService.update(item.groupId, item).subscribe(data => {
+    const group: Group = this.getGroupFromFormValue(this.groupForm.value);
+    if (group.groupId !== null && group.groupId !== undefined) {
+      this.groupService.update(group.groupId, group).subscribe(data => {
         // this.snackBar.open('Project Cost Type has been updated', '', {duration: 2000});
-        this.itemChange.emit(item);
+        this.groupChange.emit(group);
       },
-      error => this.errors.changeMessage(error));
+        error => this.errors.changeMessage(error));
     } else {
       const newGroup: CreateGroup = {
-            groupName: item.groupName,
-            groupDesc: item.groupDesc,
-            groupManager: item.groupManager,
-            level: item.level,
-            parentId: item.parentId,
-            levelDesc: item.levelDesc};
+        groupName: group.groupName,
+        groupDesc: group.groupDesc,
+        groupManager: group.groupManager,
+        level: group.level,
+        parentId: group.parentId,
+        levelDesc: group.levelDesc
+      };
 
-      this.itemService.create(JSON.stringify(newGroup)).subscribe(data => {
+      this.groupService.create(JSON.stringify(newGroup)).subscribe(data => {
         // this.resetForm();
-        this.item = data;
+        this.group = data;
         // this.snackBar.open('Project Cost Type has been Added', '', { duration: 2000 });
-        this.itemChange.emit(item);
+        this.groupChange.emit(group);
       },
-      error => this.errors.changeMessage(error));
+        error => this.errors.changeMessage(error));
     }
   }
 
 
   getGroupFromFormValue(formValue: any): Group {
-    let item: Group;
-    item = new Group();
+    let group: Group;
+    group = new Group();
 
-    item.groupId = formValue.itemId;
-    item.groupName = formValue.itemName;
-    item.groupDesc = formValue.itemDesc;
-    item.parentId = formValue.parentId;
-    item.levelDesc = formValue.levelDesc;
-    item.groupManager = formValue.itemManager;
-    item.level = formValue.level;
-    return item;
+    group.groupId = formValue.groupId;
+    group.groupName = formValue.groupName;
+    group.groupDesc = formValue.groupDesc;
+    group.parentId = formValue.parentId;
+    group.levelDesc = formValue.levelDesc;
+    group.groupManager = formValue.groupManager;
+    group.level = formValue.level;
+    return group;
 
   }
 
   createForm() {
-    this.itemForm = this.fb.group({
-      itemId: '',
+    this.groupForm = this.fb.group({
+      groupId: '',
       parentId: '',
-      level: [{value: 0, disabled: true}],
+      level: [{ value: 0, disabled: true }],
       levelDesc: '',
-      itemName: ['', Validators.required],
-      itemDesc: '',
-      itemManager: ''
+      groupName: ['', Validators.required],
+      groupDesc: '',
+      groupManager: '',
+      capBudget: '',
+      expBudget: ''
+
     }
     );
   }
 
 
-  revert() {this.ngOnChanges(); }
+  revert() { this.ngOnChanges(); }
 
-  cancel() { this.itemChange.emit(this.item); }
+  cancel() { this.groupChange.emit(this.group); }
 
   onChange(groupId: number) {
     this.groupOptions.forEach(g => {
       if (g.groupId = groupId) {
-        this.itemForm.patchValue({'level': g.level + 1 } );
+        this.groupForm.patchValue({ 'level': g.level + 1 });
       }
+    });
+  }
+
+  showBudget(isCapital: boolean) {
+    let _budgets = new Array<GroupBudget>();
+    if (this.group.groupBudgets !== undefined) {
+      _budgets = this.group.groupBudgets;
+    }
+
+    const initialState = {
+      budgets: _budgets,
+      groupId: this.group.groupId,
+      title: this.group.groupName,
+      isCapital: isCapital
+    };
+
+    this.budgetListModal = this.modalService.show(GroupBudgetComponent, { initialState });
+    this.budgetListModal.content.onClose.subscribe(result => {
+      console.log('results', result);
+      this.group.groupBudgets = result;
+      this.ngOnChanges();
+    });
+  }
+
+  addBudget(isCapital: boolean) {
+    const _budget = new GroupBudget();
+    _budget.groupBudgetId = null;
+    _budget.groupId = this.group.groupId;
+    _budget.budgetType = (isCapital) ? BudgetType.Capital : BudgetType.Expense;
+    const initialState = {
+      budget: _budget
+    };
+    this.budgetDetailModal = this.modalService.show(GroupBudgetDetailComponent, { initialState });
+    this.budgetDetailModal.content.onClose.subscribe(result => {
+      console.log('results', result);
+      this.group.groupBudgets.push(result);
+      this.ngOnChanges();
     });
   }
 

@@ -12,6 +12,7 @@ import { BudgetDetailComponent } from '../../budget/budget-detail/budget-detail.
 
 import * as moment from 'moment';
 import { of } from 'rxjs/observable/of';
+import { ConfirmationComponent } from '../../confirmation/confirmation.component';
 
 interface CreateProject {
   isTemplate: boolean;
@@ -51,6 +52,7 @@ export class ProjectDetailComponent implements OnInit, OnChanges {
   bsConfig: Partial<BsDatepickerConfig>;
   public budgetListModal: BsModalRef;
   public budgetDetailModal: BsModalRef;
+  public confirmModal: BsModalRef;
 
   constructor(private projectService: ProjectService,
     private fb: FormBuilder,
@@ -187,10 +189,21 @@ export class ProjectDetailComponent implements OnInit, OnChanges {
   }
 
   removePeriods() {
-    // remove fixed costs
-    this.project.fixedPriceCosts = [];
-    this.project.resources = [];
-    this.project.months = [];
+    const initialState = {
+      title: 'Please Confirm',
+      message:  'Confirm removing all periods. ' +
+      'Once deleted, they can be recovered if not saved, by cancelling and refreshing the page. '
+    };
+
+    this.confirmModal = this.modalService.show(ConfirmationComponent, { initialState });
+    this.confirmModal.content.onClose.subscribe(res => {
+      if (res) {
+        this.project.fixedPriceCosts = [];
+        this.project.resources = [];
+        this.project.months = [];
+      }
+    });
+
   }
 
   selectTemplate(templateId: number) {

@@ -16,14 +16,14 @@ import { routing } from './app.routing';
 import { BreadcrumbsComponent } from './components/breadcrumbs/breadcrumbs.component';
 
 
+
+
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
     HeaderComponent,
-    BreadcrumbsComponent,
-    
-  ],
+    BreadcrumbsComponent],
   imports: [
     LoginModule,
     DashboardModule,

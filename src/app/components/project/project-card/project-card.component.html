@@ -1,10 +1,10 @@
 <div class="card">
   <div class="card-header">
-    <h4>{{projectSummary.projectName}}</h4>
+    <h6>{{projectSummary.projectName}}</h6>
 
-    <h6>{{projectSummary.projectDesc}}</h6>
+    <div>{{projectSummary.projectDesc}}</div>
   </div>
-  <div>
+  <div class="project-card-body">
     <app-project-card-summary [projectSummary]="projectSummary" *ngIf="showView=='summary'"></app-project-card-summary>
     <app-project-chart [project]="project" [enableModal]="true" *ngIf="showView=='chart'"></app-project-chart>
     <app-project-card-monthly-summary [project]="project" [projectSummary]="projectSummary" *ngIf="showView=='month'"></app-project-card-monthly-summary>

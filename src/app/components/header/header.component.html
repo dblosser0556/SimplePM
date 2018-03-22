@@ -1,27 +1,28 @@
 <nav class="navbar fixed-top navbar-expand-lg navbar-default">
   <a class="navbar-brand" href="#">SimplePM</a>
-  <div *ngIf="status">
-    <button type="button" class="btn btn-navbar" (click)="setSideBarActiveStatus()" btnCheckbox btnCheckboxTrue="1" btnCheckboxFalse="0">
-      <i class="fas fa-align-left"></i>
-    </button>
-  </div>
+
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown"
     aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
-  <app-breadcrumbs></app-breadcrumbs>
+
   <div class="collapse navbar-collapse" id="navbarNavDropdown">
+    <div *ngIf="status">
+      <button type="button" class="btn btn-navbar" (click)="setSideBarActiveStatus()" btnCheckbox btnCheckboxTrue="1" btnCheckboxFalse="0">
+        <i class="fas fa-align-left"></i>
+      </button>
+    </div>
+    <app-breadcrumbs></app-breadcrumbs>
     <div class="navbar-spacer"></div>
     <ul *ngIf="!status" class="navbar-nav">
       <li class="nav-item">
         <a class="nav-link" href="#" routerLinkActive="active" routerLink="/login">Login</a>
       </li>
     </ul>
-
+    <span *ngIf="status" class="nav-text">Welcome&nbsp;{{currentUser.currentUser.firstName}}&nbsp;{{currentUser.currentUser.lastName}} &nbsp;&nbsp;&nbsp;&nbsp;
+    </span>
     <ul *ngIf="status" class="navbar-nav">
-      <li class="nav-item">
-        {{userName}}
-      </li>
+
       <li class="nav-item">
         <a class="nav-link" href="#" (click)="logout">Logout</a>
       </li>
@@ -32,11 +33,11 @@
       </button>
       <ul *dropdownMenu class="dropdown-menu dropdown-menu-right" role="menu">
         <li role="menuitem">
-          <a class="dropdown-item" href="#" routerLink="/register">Register</a>
+          <a class="dropdown-item" href="#" routerLink="/dashboard/home">Dashboard</a>
         </li>
         <li class="divider dropdown-divider"></li>
         <li role="menuitem">
-          <a class="dropdown-item" href="#" routerLink="/configuration/projects">Configuration</a>
+          <a class="dropdown-item" href="#" routerLink="/configuration">Configuration</a>
         </li>
       </ul>
     </div>

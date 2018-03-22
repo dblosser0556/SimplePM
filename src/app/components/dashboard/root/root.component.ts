@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ConfigService, ToastrType} from '../../../services';
+import { ConfigService, ToastrType } from '../../../services';
 import { Subscription } from 'rxjs/Subscription';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import '../../../rxjs-extensions';
@@ -13,25 +13,26 @@ export class RootComponent implements OnInit, OnDestroy {
   pageTitle: string;
   active = false;
   subSideBarActiveStatus: Subscription;
-  subErrors: Subscription;
+  subRouter: Subscription;
   errorMsg: string;
 
 
   constructor(private config: ConfigService,
-      private router: Router,
-      private activatedRoute: ActivatedRoute) {
+    private router: Router,
+    private activatedRoute: ActivatedRoute) {
 
-       }
+  }
 
   ngOnInit() {
     this.subSideBarActiveStatus = this.config.sidebarActiveStatus$.subscribe(
       active => this.active = active);
-    
-      this.router.events
+
+    this.subRouter = this.router.events
       .filter((event) => event instanceof NavigationEnd)
       .map(() => this.activatedRoute)
       .map((route) => {
         while (route.firstChild) { route = route.firstChild; }
+        console.log(route.outlet);
         return route;
       })
       .filter((route) => route.outlet === 'primary')
@@ -44,7 +45,12 @@ export class RootComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.subSideBarActiveStatus.unsubscribe();
+    if (this.subSideBarActiveStatus) {
+      this.subSideBarActiveStatus.unsubscribe();
+    }
+    if (this.subRouter) {
+      this.subRouter.unsubscribe();
+    }
   }
 
 }
