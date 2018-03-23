@@ -6,7 +6,7 @@ import {
   CapWeightPercent
 } from '../../../models';
 import { ProjectService } from '../../../services';
-import { ErrorMsgService, ToastrType} from '../../../services';
+import { ErrorMsgService, ToastrType } from '../../../services';
 import { UtilityService } from '../../../services/utility.service';
 import { ElementRef } from '@angular/core/src/linker/element_ref';
 import { ConfigService } from '../../../services/config.service';
@@ -26,6 +26,7 @@ export enum EditingType {
   styleUrls: ['./project-monthly-detail.component.scss']
 })
 export class ProjectMonthlyDetailComponent implements OnInit {
+
 
   @Input() project: Project;
   @Input() selectedView: string;
@@ -56,6 +57,8 @@ export class ProjectMonthlyDetailComponent implements OnInit {
   newFixedCostCount = 0;
   newMonthCount = 0;
 
+  autoSave = true;
+
   @HostListener('window:resize', ['$event'])
   onResize(event) {
     this.calcPageSize(event.target.innerWidth);
@@ -74,10 +77,13 @@ export class ProjectMonthlyDetailComponent implements OnInit {
           this.cancelFixedPriceEdit(this.project.fixedPriceCosts[this.editingIndex], this.editingIndex);
           return;
         case EditingType.resource:
+          this.updateMonthlyResourceTotal(this.project.resources[this.editingIndex]);
           this.cancelResourceEdit(this.project.resources[this.editingIndex], this.editingIndex);
           return;
 
       }
+    } else if (event.key === 'Tab') {
+      console.log('key up:', event.key);
     }
   }
 
@@ -124,7 +130,7 @@ export class ProjectMonthlyDetailComponent implements OnInit {
   }
   // Add months and resources
   addMonth() {
-   
+
     if (this.project.months === null) {
       this.project.months = [];
     }
@@ -173,9 +179,9 @@ export class ProjectMonthlyDetailComponent implements OnInit {
     this.newResourceCount--;
     const resource = new Resource();
     resource.projectId = this.project.projectId,
-    resource.resourceId = this.newResourceCount,
-    resource.resourceName = '',
-    resource.resourceTypeId = -1;
+      resource.resourceId = this.newResourceCount,
+      resource.resourceName = '',
+      resource.resourceTypeId = -1;
     resource.resourceTypeName = 'Please Select';
     resource.roleId = -1;
     resource.roleName = 'Please Select';
@@ -234,9 +240,9 @@ export class ProjectMonthlyDetailComponent implements OnInit {
     // this is used in the formatting of
     this.newFixedCostCount--;
     fixedPrice.projectId = this.project.projectId,
-    fixedPrice.fixedPriceId = this.newFixedCostCount,
-    fixedPrice.fixedPriceName = '',
-    fixedPrice.resourceTypeId = -1;
+      fixedPrice.fixedPriceId = this.newFixedCostCount,
+      fixedPrice.fixedPriceName = '',
+      fixedPrice.resourceTypeId = -1;
     fixedPrice.resourceTypeName = 'Please Select';
     fixedPrice.fixedPriceTypeId = -1;
     fixedPrice.fixedPriceTypeName = 'Please Select';
@@ -284,8 +290,9 @@ export class ProjectMonthlyDetailComponent implements OnInit {
       month.editMode = true;
       this.editingIndex = index;
       this.editingType = EditingType.month;
-    } else if (this.editingIndex !== index  && this.editingType !== EditingType.month) {
-      this.errors.showUserMessage(ToastrType.info, 'Sorry', 'Only one item at a time', false, 2000);
+    } else if (this.editingIndex !== index || this.editingType !== EditingType.month) {
+      this.saveOrCancelEdit();
+      this.editPhase(month, index);
     }
   }
 
@@ -310,8 +317,10 @@ export class ProjectMonthlyDetailComponent implements OnInit {
       this.editingIndex = index;
       this.editingType = EditingType.resource;
       this.savedResource = new Resource(resource);
-    } else if (this.editingIndex !== index  && this.editingType !== EditingType.resource) {
-      this.errors.showUserMessage(ToastrType.info, 'Sorry', 'Only one row at a time', false, 2000);
+    } else if (this.editingIndex !== index || this.editingType !== EditingType.resource) {
+      // this.errors.showUserMessage(ToastrType.info, 'Sorry', 'Only one row at a time', false, 2000);
+      this.saveOrCancelEdit();
+      this.editResource(resource, index);
     }
 
   }
@@ -385,6 +394,7 @@ export class ProjectMonthlyDetailComponent implements OnInit {
         month.plannedEffort = Number(event.target.value);
         this.updateMonthlyResourceTotal(resource);
         this.updateMonthlyTotals(mIndex);
+        console.log('effort update: ', mIndex);
         break;
       case 'actualmonth':
         month.actualEffort = Number(event.target.value);
@@ -406,8 +416,10 @@ export class ProjectMonthlyDetailComponent implements OnInit {
       this.editingIndex = index;
       this.editingType = EditingType.fixedPrice;
       this.savedFixedPrice = new FixedPrice(fixedPrice);
-    } else if (this.editingIndex !== index  && this.editingType !== EditingType.fixedPrice) {
-      this.errors.showUserMessage(ToastrType.info, 'Sorry', 'Only one row at a time', false, 2000);
+    } else if (this.editingIndex !== index || this.editingType !== EditingType.fixedPrice) {
+      // this.errors.showUserMessage(ToastrType.info, 'Sorry', 'Only one row at a time', false, 2000);
+      this.saveOrCancelEdit();
+      this.editFixedPrice(fixedPrice, index);
     }
 
   }
@@ -484,6 +496,33 @@ export class ProjectMonthlyDetailComponent implements OnInit {
     }
   }
 
+  // save or cancel the current row of phase 
+  saveOrCancelEdit(): any {
+    switch (this.editingType) {
+      case EditingType.fixedPrice:
+        if (this.autoSave) {
+          this.saveFixedPriceEdit(this.project.fixedPriceCosts[this.editingIndex], this.editingIndex);
+        } else {
+          this.cancelFixedPriceEdit(this.project.fixedPriceCosts[this.editingIndex], this.editingIndex);
+        }
+        break;
+      case EditingType.resource:
+        if (this.autoSave) {
+          this.saveResourceEdit(this.project.resources[this.editingIndex], this.editingIndex);
+        } else {
+          this.cancelFixedPriceEdit(this.project.resources[this.editingIndex], this.editingIndex);
+        }
+        break;
+      case EditingType.month:
+        // can only cancel phase and don't have the event data to save.
+        this.cancelPhase(this.project.months[this.editingIndex], this.editingIndex);
+        break;
+    }
+
+
+  }
+
+
   updateMonthlyResourceTotal(resource: Resource) {
     let totalPlannedEffort = 0;
     let totalActualEffort = 0;
@@ -521,13 +560,13 @@ export class ProjectMonthlyDetailComponent implements OnInit {
 
     for (const resource of this.project.resources) {
       totalActualCapital += resource.resourceMonths[i].actualEffort * resource.rate *
-          resource.resourceMonths[i].actualEffortCapPercent;
+        resource.resourceMonths[i].actualEffortCapPercent;
       totalPlannedCapital += resource.resourceMonths[i].plannedEffort * resource.rate *
-          resource.resourceMonths[i].plannedEffortCapPercent;
+        resource.resourceMonths[i].plannedEffortCapPercent;
       totalActualExpense += resource.resourceMonths[i].actualEffort * resource.rate *
-          (1 - resource.resourceMonths[i].actualEffortCapPercent);
+        (1 - resource.resourceMonths[i].actualEffortCapPercent);
       totalPlannedExpense += resource.resourceMonths[i].plannedEffort * resource.rate *
-          (1 - resource.resourceMonths[i].plannedEffortCapPercent);
+        (1 - resource.resourceMonths[i].plannedEffortCapPercent);
     }
 
     for (const fixedPrice of this.project.fixedPriceCosts) {
@@ -599,7 +638,7 @@ export class ProjectMonthlyDetailComponent implements OnInit {
     const staticMonthWidth = 75;
     this.pageSize = Math.floor((windowSize - staticColWidth) / staticMonthWidth);
 
-    if ( this.lcol + this.pageSize ) {
+    if (this.lcol + this.pageSize) {
       this.lcol = this.fcol + this.pageSize;
     } else {
       this.lcol = this.project.months.length;

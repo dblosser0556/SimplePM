@@ -1,10 +1,13 @@
 
 
 
-.table-sm {
+.table, .table-sm {
   font-size: .7rem;
-  table-layout: fixed;
+  table-layout: auto;
+  width: 100%;
+
 }
+
 
 
 
@@ -26,7 +29,7 @@
   white-space: nowrap;
 } 
 
-div .fixed-col {
+th div .fixed-col {
   overflow: hidden;
   text-overflow: clip;
   min-width: 120px;
@@ -34,12 +37,12 @@ div .fixed-col {
 }
 
 .month-col {
-  width: 55px;
+  min-width: 55px;
   overflow: hidden;
   white-space: nowrap;
 }
 .total-col {
-  max-width: 70px;
+  min-width: 70px;
   overflow: hidden;
   white-space: nowrap;
 }
